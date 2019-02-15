@@ -79,16 +79,14 @@
      <Compile Include="Assets\RoomAliveToolkit\Scripts\Utilities\UnityUtilities.cs" />
      <Compile Include="Assets\RoomAliveToolkit\Scripts\Utilities\UnmanagedImage.cs" />
      <Compile Include="Assets\RoomAliveToolkit\Scripts\Utilities\Win32.cs" />
+     <None Include="Assets\RoomAliveToolkit\Shaders\ReplacementColorDepthMeshSurfaceShader.shader" />
      <None Include="Assets\RoomAliveToolkit\Shaders\ReplacementColorUnlitShader.shader" />
      <None Include="Assets\RoomAliveToolkit\Shaders\ProjectionMappingMinimal.shader" />
-     <None Include="Assets\RoomAliveToolkit_Examples\calibration1x1\officeTest.xml" />
      <None Include="Assets\RoomAliveToolkit\Shaders\DepthMeshProcessing.cginc" />
-     <None Include="Assets\RoomAliveToolkit\Shaders\DynamicMaskShader.shader" />
-     <None Include="Assets\RoomAliveToolkit_Examples\WritingFromKinnect\Kinect_0_KinectCalibration.xml" />
-     <None Include="Assets\RoomAliveToolkit\Shaders\ProjectionMappingDepthMeshMinimal.shader" />
+     <None Include="Assets\RoomAliveToolkit_Examples\calibration1x1\officeTest.xml" />
      <None Include="Assets\RoomAliveToolkit\Shaders\DepthMeshSurfaceShader.shader" />
-     <None Include="Assets\RoomAliveToolkit\Shaders\ReplacementColorDepthMeshSurfaceShader.shader" />
-     <None Include="Assets\RoomAliveToolkit_Examples\calibration3x3\ensemble.xml" />
+     <None Include="Assets\RoomAliveToolkit\Shaders\DynamicMaskShader.shader" />
+     <None Include="Assets\RoomAliveToolkit\Shaders\ProjectionMappingDepthMeshMinimal.shader" />
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>D:/Projects/GitHub/Hologroup/HoloPort/RoomAliveUnity/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
  </Reference>
@@ -289,6 +287,9 @@
  </Reference>
  <Reference Include="UnityEngine.Networking">
  <HintPath>D:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="Vuforia.UnityExtensions">
+ <HintPath>D:/Program Files/Unity/Editor/Data/PlaybackEngines/VuforiaSupport/Managed/Runtime/Vuforia.UnityExtensions.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.GoogleAudioSpatializer">
  <HintPath>D:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityGoogleAudioSpatializer/RuntimeEditor/UnityEngine.GoogleAudioSpatializer.dll</HintPath>
