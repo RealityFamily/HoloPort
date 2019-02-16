@@ -6,3 +6,5 @@ RoomAliveKinectServer/ConsoleTextBox/bin/Debug/ConsoleTextBox\.pdb
 *.meta
 
 RoomAliveUnity/obj/
+
+RoomAliveUnity/Library/

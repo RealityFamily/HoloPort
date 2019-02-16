@@ -109,6 +109,12 @@
     <Reference Include="Unity.Analytics.DataPrivacy">
       <HintPath>D:/Projects/GitHub/RealityFamilyTeamRepo/HoloPort/RoomAliveUnity/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.XR.WindowsMR.Editor">
+      <HintPath>D:/Projects/GitHub/RealityFamilyTeamRepo/HoloPort/RoomAliveUnity/Library/ScriptAssemblies/Unity.XR.WindowsMR.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.XR.WindowsMR">
+      <HintPath>D:/Projects/GitHub/RealityFamilyTeamRepo/HoloPort/RoomAliveUnity/Library/ScriptAssemblies/Unity.XR.WindowsMR.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>D:/Program Files/Unity/2018.3.6f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
     </Reference>
