@@ -13,6 +13,10 @@ using Random = UnityEngine.Random;
 public class Connection : MonoBehaviour
 {
     private string ConnPass = "";
+    bool startserver = false;
+    public bool StartServer {set {
+            startserver = value;
+    }}
 
     // Start is called before the first frame update
     void Start()
@@ -22,35 +26,29 @@ public class Connection : MonoBehaviour
             ConnPass += Random.Range(0, 9);
         }
 
-        Thread thread = new Thread(new ThreadStart(AnswerWaiting));
-    }
+        print(ConnPass);
 
-    private void AnswerWaiting()
-    {
-        IPEndPoint ippoint = new IPEndPoint(IPAddress.Any, 65000);
-        Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        try
+        new Thread(() =>
         {
-            socket.Bind(ippoint);
-            socket.Listen(1);
 
-            print("tcpServer запущен");
-
-            bool answer = false;
-            while (!answer)
+            TcpListener server = new TcpListener(GetLocalIPAddress(), 7777);
+            print(GetLocalIPAddress().ToString());
+            server.Start();
+            try
             {
-                Socket handler = socket.Accept();
-                StringBuilder builder = new StringBuilder();
-                int bytes = 0;
+                TcpClient client = server.AcceptTcpClient();
+                NetworkStream stream = client.GetStream();
+
                 byte[] data = new byte[256];
+                StringBuilder response = new StringBuilder();
 
-                bytes = handler.Receive(data);
-                builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
+                int bytes = stream.Read(data, 0, data.Length);
+                response.Append(Encoding.UTF8.GetString(data, 0, bytes));
 
-                if (builder.ToString() == ConnPass)
+                if (response.ToString() == ConnPass)
                 {
                     data = Encoding.Unicode.GetBytes("Подключен");
-                    handler.Send(data);
+                    stream.Write(data, 0, data.Length);
 
                     GameObject parent = transform.parent.gameObject;
                     parent.transform.Find("MyRoom").gameObject.SetActive(true);
@@ -61,16 +59,30 @@ public class Connection : MonoBehaviour
                 else
                 {
                     data = Encoding.Unicode.GetBytes("Неверный пароль");
-                    handler.Send(data);
+                    stream.Write(data, 0, data.Length);
                 }
             }
-        }
-        catch (Exception ex)
+            catch (Exception ex)
+            {
+                server.Stop();
+                print(GetLocalIPAddress().ToString());
+                print("Kinect не запущен");
+                print(ex.Message);
+            }
+        }).Start();
+    }
+
+    public static IPAddress GetLocalIPAddress()
+    {
+        var host = Dns.GetHostEntry(Dns.GetHostName());
+        foreach (var ip in host.AddressList)
         {
-            print(ippoint.Address.ToString());
-            print("Kinect не запущен");
-            print(ex.Message);
+            if (ip.AddressFamily == AddressFamily.InterNetwork)
+            {
+                return ip;
+            }
         }
+        throw new Exception("No network adapters with an IPv4 address in the system!");
     }
 
     // Update is called once per frame

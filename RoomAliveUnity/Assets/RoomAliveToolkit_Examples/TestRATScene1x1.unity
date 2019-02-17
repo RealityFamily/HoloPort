@@ -685,17 +685,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 432b55015782fff48bf1847ece9e9393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BroadcastPort: 47777
-  m_BroadcastKey: 2222
-  m_BroadcastVersion: 1
-  m_BroadcastSubVersion: 1
-  m_BroadcastInterval: 60000
-  m_UseNetworkManager: 0
-  m_BroadcastData: I'M HOLOLENS
-  m_ShowGUI: 0
-  m_OffsetX: 0
-  m_OffsetY: 0
   alive: 1
+  message: I'M HOLOLENS
 --- !u!114 &1545984928
 MonoBehaviour:
   m_ObjectHideFlags: 0

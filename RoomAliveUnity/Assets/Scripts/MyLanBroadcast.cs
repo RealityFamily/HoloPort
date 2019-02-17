@@ -1,28 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class MyLanBroadcast : NetworkDiscovery
+public class MyLanBroadcast : MonoBehaviour
 {
     public bool alive = true;
+    public string message;
 
-    public void StartBroadcast()
+    private void Start()
     {
-        StopBroadcast();
-        base.Initialize();
-        base.StartAsServer();
-    }
-    public override void OnReceivedBroadcast(string fromAddress, string data)
-    {
-        base.OnReceivedBroadcast(fromAddress, data);
-    }
-
-    private void Update()
-    {
-        if (!alive)
+        new Thread(() =>
         {
-            StopBroadcast();
-        }
+            UdpClient Server = new UdpClient(8888);
+            byte[] ResponseData = Encoding.ASCII.GetBytes(message);
+
+            IPEndPoint ClientEp = new IPEndPoint(IPAddress.Broadcast, 0);
+            Server.Send(ResponseData, ResponseData.Length, ClientEp);
+
+            Thread.Sleep(60000);
+
+            //Server.Close();
+        }).Start();
     }
 }
