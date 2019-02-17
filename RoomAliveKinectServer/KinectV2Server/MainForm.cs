@@ -54,8 +54,8 @@ namespace KinectV2Server
         private SharpDX.Direct2D1.Bitmap colorBitmap, depthBitmap;
 
         // easy access variables
-        public static int depthImageWidth = Kinect2Calibration.depthImageWidth;
-        public static int depthImageHeight = Kinect2Calibration.depthImageHeight;
+        public static int depthImageWidth = /*Kinect2Calibration.depthImageWidth*/512;
+        public static int depthImageHeight = /*Kinect2Calibration.depthImageHeight*/424;
         public const int colorImageWidth = 1920;
         public const int colorImageHeight = 1080;
         public float depthToColorWidthRatio = depthImageWidth / colorImageWidth;

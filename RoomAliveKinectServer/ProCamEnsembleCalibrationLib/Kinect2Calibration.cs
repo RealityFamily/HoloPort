@@ -9,8 +9,8 @@ namespace RoomAliveToolkit
     [DataContract]
     public class Kinect2Calibration
     {
-        public const int depthImageWidth = 640;
-        public const int depthImageHeight = 480;
+        public const int depthImageWidth = 512;
+        public const int depthImageHeight = 424;
         public const int colorImageWidth = 1920;
         public const int colorImageHeight = 1080;
 
