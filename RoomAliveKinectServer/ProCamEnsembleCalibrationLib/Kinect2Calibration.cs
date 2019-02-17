@@ -9,8 +9,8 @@ namespace RoomAliveToolkit
     [DataContract]
     public class Kinect2Calibration
     {
-        public const int depthImageWidth = 512;
-        public const int depthImageHeight = 424;
+        public const int depthImageWidth = 640;
+        public const int depthImageHeight = 480;
         public const int colorImageWidth = 1920;
         public const int colorImageHeight = 1080;
 
@@ -28,6 +28,7 @@ namespace RoomAliveToolkit
         [XmlIgnoreAttribute]
         public bool silent = false;
 
+        
         public void RecoverCalibrationFromSensor(KinectSensor kinectSensor)
         {
             colorCameraMatrix = new RoomAliveToolkit.Matrix(3, 3);
@@ -643,9 +644,5 @@ namespace RoomAliveToolkit
             // convert back to Y down
             depthY = depthImageHeight - depthY;
         }
-
-
-
-
     }
 }

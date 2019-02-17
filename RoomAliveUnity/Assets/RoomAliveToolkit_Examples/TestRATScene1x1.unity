@@ -319,7 +319,7 @@ MonoBehaviour:
   calibrationLoaded: 1
   serverIPAddress: localhost
   StreamDepth: 1
-  StreamColor: 0
+  StreamColor: 1
   StreamSkeleton: 0
   StreamAudio: 0
   updateFPS: 0
