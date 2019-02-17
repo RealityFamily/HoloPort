@@ -5,9 +5,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F0013BC6-14D2-782C-103E-098681D811FD}</ProjectGuid>
+    <ProjectGuid>{D7E0F621-D98D-F122-678E-C02D028E5512}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <AssemblyName>Unity.XR.WindowsMR.Editor</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
@@ -15,7 +15,7 @@
     <TargetFrameworkProfile></TargetFrameworkProfile>
     <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectGenerator>VSTU</UnityProjectGenerator>
-    <UnityProjectType>Game:1</UnityProjectType>
+    <UnityProjectType>Editor:5</UnityProjectType>
     <UnityBuildTarget>WSAPlayer:21</UnityBuildTarget>
     <UnityVersion>2018.3.6f1</UnityVersion>
     <RootNamespace></RootNamespace>
@@ -233,17 +233,53 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>D:/Program Files/Unity/2018.3.6f1/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>D:/Program Files/Unity/2018.3.6f1/Editor/Data/UnityExtensions/Unity/GUISystem/Editor/UnityEditor.UI.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.Timeline">
       <HintPath>D:/Program Files/Unity/2018.3.6f1/Editor/Data/UnityExtensions/Unity/Timeline/RuntimeEditor/UnityEngine.Timeline.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Timeline">
+      <HintPath>D:/Program Files/Unity/2018.3.6f1/Editor/Data/UnityExtensions/Unity/Timeline/Editor/UnityEditor.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Networking">
       <HintPath>D:/Program Files/Unity/2018.3.6f1/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.Networking">
+      <HintPath>D:/Program Files/Unity/2018.3.6f1/Editor/Data/UnityExtensions/Unity/Networking/Editor/UnityEditor.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.GoogleAudioSpatializer">
+      <HintPath>D:/Program Files/Unity/2018.3.6f1/Editor/Data/UnityExtensions/Unity/UnityGoogleAudioSpatializer/Editor/UnityEditor.GoogleAudioSpatializer.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.GoogleAudioSpatializer">
       <HintPath>D:/Program Files/Unity/2018.3.6f1/Editor/Data/UnityExtensions/Unity/UnityGoogleAudioSpatializer/RuntimeEditor/UnityEngine.GoogleAudioSpatializer.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.SpatialTracking">
+      <HintPath>D:/Program Files/Unity/2018.3.6f1/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/Editor/UnityEditor.SpatialTracking.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.SpatialTracking">
       <HintPath>D:/Program Files/Unity/2018.3.6f1/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.VR">
+      <HintPath>D:/Program Files/Unity/2018.3.6f1/Editor/Data/UnityExtensions/Unity/UnityVR/Editor/UnityEditor.VR.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Graphs">
+      <HintPath>D:/Program Files/Unity/2018.3.6f1/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Android.Extensions">
+      <HintPath>D:/Program Files/Unity/2018.3.6f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.WSA.Extensions">
+      <HintPath>D:/Program Files/Unity/2018.3.6f1/Editor/Data/PlaybackEngines/MetroSupport/UnityEditor.WSA.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.WindowsStandalone.Extensions">
+      <HintPath>D:/Program Files/Unity/2018.3.6f1/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
+      <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Advertisements">
+      <HintPath>D:/Projects/GitHub/RealityFamilyTeamRepo/HoloPort/RoomAliveUnity/Library/PackageCache/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
       <HintPath>D:/Projects/GitHub/RealityFamilyTeamRepo/HoloPort/RoomAliveUnity/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
@@ -253,6 +289,9 @@
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
       <HintPath>D:/Projects/GitHub/RealityFamilyTeamRepo/HoloPort/RoomAliveUnity/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Purchasing">
+      <HintPath>D:/Projects/GitHub/RealityFamilyTeamRepo/HoloPort/RoomAliveUnity/Library/PackageCache/com.unity.purchasing@2.0.3/Editor/UnityEditor.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>D:\Program Files\Unity\2018.3.6f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\mscorlib.dll</HintPath>
@@ -610,62 +649,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Unity.TextMeshPro.Editor.csproj">
-      <Project>{3A848AB7-9891-EDDA-D555-BF184C2F81F4}</Project>
-      <Name>Unity.TextMeshPro.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.PackageManagerUI.Editor.csproj">
-      <Project>{6877705C-FBD9-0C4F-5AFB-6FB431E5D39D}</Project>
-      <Name>Unity.PackageManagerUI.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.CollabProxy.Editor.csproj">
-      <Project>{C12CEEC6-100C-58A2-DE36-314E4DE5E40B}</Project>
-      <Name>Unity.CollabProxy.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.XR.WindowsMR.Editor.csproj">
-      <Project>{D7E0F621-D98D-F122-678E-C02D028E5512}</Project>
-      <Name>Unity.XR.WindowsMR.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.TextMeshPro.csproj">
-      <Project>{07A21C90-D344-AE1A-8456-9910C203B41A}</Project>
-      <Name>Unity.TextMeshPro</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.Analytics.DataPrivacy.csproj">
-      <Project>{D6E266C6-3D1F-28C8-9FEB-2A01E44DBF77}</Project>
-      <Name>Unity.Analytics.DataPrivacy</Name>
-    </ProjectReference>
     <ProjectReference Include="Unity.XR.WindowsMR.csproj">
       <Project>{5E11E1B3-0410-B7BD-6D16-1A513F34657C}</Project>
       <Name>Unity.XR.WindowsMR</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Kinect\RATDepthMesh.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Kinect\RATKinectClient.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Kinect\RATKinectPlaybackController.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Kinect\RATKinectSkeleton.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Kinect\RATNetworkStreamer.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Kinect\RATSkeletonProvider.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Projection\RATDynamicMask.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Projection\RATProjectionManager.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Projection\RATProjectionPass.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Projection\RATProjector.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\RATCalibrationData.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\RATSceneSetup.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Users\RATUser.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Users\RATUserViewCamera.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Utilities\ARGBImage.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Utilities\ByteImage.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Utilities\Float2Image.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Utilities\FloatImage.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Utilities\FrameRate.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Utilities\Matrix.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Utilities\ProjectorCameraEnsemble.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Utilities\RGBImage.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Utilities\ShortImage.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Utilities\UnityUtilities.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Utilities\UnmanagedImage.cs" />
-    <Compile Include="Assets\RoomAliveToolkit\Scripts\Utilities\Win32.cs" />
+    <Compile Include="Packages\com.unity.xr.windowsmr.metro\Editor\HolographicRemotingPluginRegistration.cs" />
+    <Compile Include="Packages\com.unity.xr.windowsmr.metro\Editor\SpatialMappingBaseInspector.cs" />
+    <Compile Include="Packages\com.unity.xr.windowsmr.metro\Editor\SpatialMappingColliderInspector.cs" />
+    <Compile Include="Packages\com.unity.xr.windowsmr.metro\Editor\SpatialMappingRendererInspector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\RoomAliveToolkit\Shaders\DepthMeshProcessing.cginc" />
