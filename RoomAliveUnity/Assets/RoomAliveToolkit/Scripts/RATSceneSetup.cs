@@ -36,8 +36,8 @@ namespace RoomAliveToolkit
 
         public void LoadDefault3DModels()
         {
-            kinectModel = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/RoomAliveToolkit/Models/Kinect.obj");
-            projectorModel = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/RoomAliveToolkit/Models/Projector.obj");
+            //kinectModel = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/RoomAliveToolkit/Models/Kinect.obj");
+            //projectorModel = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/RoomAliveToolkit/Models/Projector.obj");
         }
 
         public void BuildSceneComponents()

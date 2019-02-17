@@ -572,7 +572,7 @@ PlayerSettings:
     iOS: 2
   scriptingBackend:
     Android: 0
-    Metro: 2
+    Metro: 1
     Standalone: 0
     WP8: 2
     WebGL: 1
@@ -590,11 +590,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: RoomAliveUnityCore
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: DefaultCompany
+  metroCertificateIssuer: DefaultCompany
+  metroCertificateNotAfter: 8077e4106ae5d501
   metroApplicationDescription: RoomAliveUnityCore
   wsaImages: {}
   metroTileShortName: 
