@@ -16,7 +16,9 @@ using Microsoft.Kinect.Face;
 using SharpDX.DXGI;
 using SharpDX.DirectWrite;
 using RoomAliveToolkit;
-
+using System.Net.Sockets;
+using System.Net;
+using System.Text;
 
 namespace KinectV2Server
 {
@@ -1606,9 +1608,37 @@ namespace KinectV2Server
             }
 
             return isFaceValid;
+<<<<<<< HEAD
         }
         #endregion FaceProcessing
 
+=======
+        }
+        #endregion FaceProcessing
+
+        #region Group connection
+        
+        public bool ConnectStatus {
+            set {
+                if (value)
+                {
+                    ConnectionStatus.Checked = true;
+                } else
+                {
+                    ConnectionStatus.Checked = false;
+                }
+            }
+        }
+
+        private void ShowDialog()
+        {
+            InputForm form = new InputForm();
+            form.ShowDialog();
+        }
+
+        #endregion
+
+>>>>>>> Leo_dev
         #region Form Handling Methods
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -1646,6 +1676,11 @@ namespace KinectV2Server
         private void checkBoxBlur_CheckedChanged(object sender, EventArgs e)
         {
             settings.BlurDepthImages = checkBoxBlur.Checked;
+        }
+
+        private void createConnectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowDialog();
         }
 
         private void checkBoxStreamColor_CheckedChanged(object sender, EventArgs e)
@@ -1728,7 +1763,14 @@ namespace KinectV2Server
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
+<<<<<<< HEAD
         }
         #endregion
+=======
+        }
+
+        
+#endregion
+>>>>>>> Leo_dev
     }
 }

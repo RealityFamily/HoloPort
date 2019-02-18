@@ -70,15 +70,18 @@
             this.checkBoxProcessRAW = new System.Windows.Forms.CheckBox();
             this.checkBoxRenderFaceTracking = new System.Windows.Forms.CheckBox();
             this.checkBoxFlip = new System.Windows.Forms.CheckBox();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.label13 = new System.Windows.Forms.Label();
+            this.checkBoxBlur = new System.Windows.Forms.CheckBox();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.acquireBackgroundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveBackgroundToOBJFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.label13 = new System.Windows.Forms.Label();
-            this.checkBoxBlur = new System.Windows.Forms.CheckBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.connectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createConnectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ConnectionStatus = new System.Windows.Forms.RadioButton();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarThreshold)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -525,16 +528,25 @@
             this.checkBoxFlip.UseVisualStyleBackColor = true;
             this.checkBoxFlip.CheckedChanged += new System.EventHandler(this.checkBoxFlip_CheckedChanged);
             // 
-            // menuStrip1
+            // label13
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.backgroundToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1180, 24);
-            this.menuStrip1.TabIndex = 40;
-            this.menuStrip1.Text = "menuStrip1";
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(430, 61);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(97, 13);
+            this.label13.TabIndex = 41;
+            this.label13.Text = "Color Compression:";
+            // 
+            // checkBoxBlur
+            // 
+            this.checkBoxBlur.AutoSize = true;
+            this.checkBoxBlur.Location = new System.Drawing.Point(433, 126);
+            this.checkBoxBlur.Name = "checkBoxBlur";
+            this.checkBoxBlur.Size = new System.Drawing.Size(133, 17);
+            this.checkBoxBlur.TabIndex = 42;
+            this.checkBoxBlur.Text = "Blur Foreground Depth";
+            this.checkBoxBlur.UseVisualStyleBackColor = true;
+            this.checkBoxBlur.CheckedChanged += new System.EventHandler(this.checkBoxBlur_CheckedChanged);
             // 
             // fileToolStripMenuItem
             // 
@@ -582,31 +594,50 @@
             this.saveBackgroundToOBJFileToolStripMenuItem.Text = "Save Background to OBJ File";
             this.saveBackgroundToOBJFileToolStripMenuItem.Click += new System.EventHandler(this.saveToOBJToolStripMenuItem_Click);
             // 
-            // label13
+            // menuStrip1
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(430, 61);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(97, 13);
-            this.label13.TabIndex = 41;
-            this.label13.Text = "Color Compression:";
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.backgroundToolStripMenuItem,
+            this.connectionToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1180, 24);
+            this.menuStrip1.TabIndex = 40;
+            this.menuStrip1.Text = "menuStrip1";
             // 
-            // checkBoxBlur
+            // connectionToolStripMenuItem
             // 
-            this.checkBoxBlur.AutoSize = true;
-            this.checkBoxBlur.Location = new System.Drawing.Point(433, 126);
-            this.checkBoxBlur.Name = "checkBoxBlur";
-            this.checkBoxBlur.Size = new System.Drawing.Size(133, 17);
-            this.checkBoxBlur.TabIndex = 42;
-            this.checkBoxBlur.Text = "Blur Foreground Depth";
-            this.checkBoxBlur.UseVisualStyleBackColor = true;
-            this.checkBoxBlur.CheckedChanged += new System.EventHandler(this.checkBoxBlur_CheckedChanged);
+            this.connectionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.createConnectionToolStripMenuItem});
+            this.connectionToolStripMenuItem.Name = "connectionToolStripMenuItem";
+            this.connectionToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
+            this.connectionToolStripMenuItem.Text = "Connection";
+            // 
+            // createConnectionToolStripMenuItem
+            // 
+            this.createConnectionToolStripMenuItem.Name = "createConnectionToolStripMenuItem";
+            this.createConnectionToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.createConnectionToolStripMenuItem.Text = "Create connection";
+            this.createConnectionToolStripMenuItem.Click += new System.EventHandler(this.createConnectionToolStripMenuItem_Click);
+            // 
+            // ConnectionStatus
+            // 
+            this.ConnectionStatus.AutoCheck = false;
+            this.ConnectionStatus.AutoSize = true;
+            this.ConnectionStatus.Location = new System.Drawing.Point(697, 684);
+            this.ConnectionStatus.Name = "ConnectionStatus";
+            this.ConnectionStatus.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ConnectionStatus.Size = new System.Drawing.Size(109, 17);
+            this.ConnectionStatus.TabIndex = 43;
+            this.ConnectionStatus.Text = "ConnectionStatus";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1180, 713);
+            this.Controls.Add(this.ConnectionStatus);
             this.Controls.Add(this.checkBoxBlur);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.checkBoxFlip);
@@ -696,15 +727,18 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox checkBoxRenderFaceTracking;
         private System.Windows.Forms.CheckBox checkBoxFlip;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.CheckBox checkBoxBlur;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveSettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem backgroundToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem acquireBackgroundToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveBackgroundToOBJFileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.CheckBox checkBoxBlur;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem connectionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem createConnectionToolStripMenuItem;
+        private System.Windows.Forms.RadioButton ConnectionStatus;
         //private System.Windows.Forms.Button ClickToTrack;
         //private System.Windows.Forms.CheckBox checkBoxStreamGlassesPose;
     }
