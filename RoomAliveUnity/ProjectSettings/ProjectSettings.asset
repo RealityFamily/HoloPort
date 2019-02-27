@@ -583,10 +583,11 @@ PlayerSettings:
   managedStrippingLevel: {}
   incrementalIl2cppBuild:
     iOS: 0
-  allowUnsafeCode: 0
+  allowUnsafeCode: 1
   additionalIl2CppArgs: 
-  scriptingRuntimeVersion: 0
-  apiCompatibilityLevelPerPlatform: {}
+  scriptingRuntimeVersion: 1
+  apiCompatibilityLevelPerPlatform:
+    Metro: 6
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: RoomAliveUnityCore
@@ -598,7 +599,7 @@ PlayerSettings:
   metroCertificateNotAfter: 8077e4106ae5d501
   metroApplicationDescription: RoomAliveUnityCore
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: RoomAliveUnityCore
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
@@ -719,7 +720,7 @@ PlayerSettings:
   facebookStatus: 1
   facebookXfbml: 0
   facebookFrictionlessRequests: 1
-  apiCompatibilityLevel: 2
+  apiCompatibilityLevel: 6
   cloudProjectId: 
   framebufferDepthMemorylessMode: 0
   projectName: 
