@@ -26,14 +26,14 @@ namespace KinectV2Server
         public NetworkStream stream = null;
 
         public int ID = 0; //counter of clients (each is unique)
-        public int MessageSize = 10000000;
+        public int MessageSize = 1000;
         public bool readyToSend = true;
 
         public bool active = false;
 
         // Receiving buffers:
         public byte[] receivingMessageBuffer;
-        public const int maximumMessageQueueLength = 50;
+        public const int maximumMessageQueueLength = 20;
         public Queue<byte[]> sendingMessageQueue = new Queue<byte[]>(maximumMessageQueueLength);
 
         public int BytesReceived = 0;

@@ -12,7 +12,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
+  companyName: RealityFamily
   productName: RoomAliveUnityCore
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -281,6 +281,7 @@ PlayerSettings:
   - m_BuildTarget: Metro
     m_Enabled: 1
     m_Devices:
+    - None
     - WindowsMR
   - m_BuildTarget: N3DS
     m_Enabled: 0
@@ -572,7 +573,7 @@ PlayerSettings:
     iOS: 2
   scriptingBackend:
     Android: 0
-    Metro: 2
+    Metro: 1
     Standalone: 0
     WP8: 2
     WebGL: 1
@@ -582,27 +583,28 @@ PlayerSettings:
   managedStrippingLevel: {}
   incrementalIl2cppBuild:
     iOS: 0
-  allowUnsafeCode: 0
+  allowUnsafeCode: 1
   additionalIl2CppArgs: 
-  scriptingRuntimeVersion: 0
-  apiCompatibilityLevelPerPlatform: {}
+  scriptingRuntimeVersion: 1
+  apiCompatibilityLevelPerPlatform:
+    Metro: 6
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: RoomAliveUnityCore
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: DefaultCompany
+  metroCertificateIssuer: DefaultCompany
+  metroCertificateNotAfter: 8077e4106ae5d501
   metroApplicationDescription: RoomAliveUnityCore
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: RoomAliveUnityCore
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
   metroWideTileShowName: 0
-  metroSupportStreamingInstall: 0
+  metroSupportStreamingInstall: 1
   metroLastRequiredScene: 0
   metroDefaultTileSize: 1
   metroTileForegroundText: 1
@@ -622,8 +624,8 @@ PlayerSettings:
       EnterpriseAuthentication: False
       HumanInterfaceDevice: False
       InputInjectionBrokered: False
-      InternetClient: False
-      InternetClientServer: False
+      InternetClient: True
+      InternetClientServer: True
       Location: False
       LowLevelDevices: False
       Microphone: False
@@ -634,23 +636,23 @@ PlayerSettings:
       PhoneCallHistoryPublic: False
       PicturesLibrary: False
       PointOfService: False
-      PrivateNetworkClientServer: False
+      PrivateNetworkClientServer: True
       Proximity: False
       RecordedCallsFolder: False
-      RemoteSystem: False
+      RemoteSystem: True
       RemovableStorage: False
       SharedUserCertificates: False
       SpatialPerception: False
       SystemManagement: False
       UserAccountInformation: False
       UserDataTasks: False
-      UserNotificationListener: False
+      UserNotificationListener: True
       VideosLibrary: False
-      VoipCall: False
+      VoipCall: True
       WebCam: False
   metroTargetDeviceFamilies:
-    Desktop: False
-    Holographic: False
+    Desktop: True
+    Holographic: True
     IoT: False
     IoTHeadless: False
     Mobile: False
@@ -718,7 +720,7 @@ PlayerSettings:
   facebookStatus: 1
   facebookXfbml: 0
   facebookFrictionlessRequests: 1
-  apiCompatibilityLevel: 2
+  apiCompatibilityLevel: 6
   cloudProjectId: 
   framebufferDepthMemorylessMode: 0
   projectName: 

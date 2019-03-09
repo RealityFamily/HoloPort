@@ -1153,11 +1153,11 @@ namespace RoomAliveToolkit
             {
                 byte type = e.data[0];
                 Debug.Log("Received message from configuration server. Type: " + type + " Size " + e.data.Length + " bytes");
-                if (type == (byte)1)
-                {
+                if (type == (byte)1) { 
+                
                     DepthSpaceToCameraSpaceTable.FromByteArray(e.data,1);
                     depthToCameraSpaceTableUpdateCount++;
-
+               
                     if (StreamToFile) //record this info for playback
                     {
                         Debug.Log("Saving DepthSpaceToCameraSpaceTable to file: " + depthToCameraTablePath);

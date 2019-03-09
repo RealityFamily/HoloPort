@@ -4,3 +4,5 @@ RoomAliveKinectServer/ConsoleTextBox/bin/Debug/ConsoleTextBox\.pdb
 *.pdb
 
 RoomAliveUnity/obj/
+
+RoomAliveUnity/Build/
