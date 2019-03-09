@@ -71,7 +71,7 @@ namespace KinectV2Server
 
             if (response.ToString() == "Подключен")
             {
-                    MainForm.instance.ConnectStatus = true;
+                    //MainForm.instance.ConnectStatus = true;
             }
 
             new Thread(() =>
@@ -80,7 +80,7 @@ namespace KinectV2Server
                 {
                     if (!client.Connected)
                     {
-                        MainForm.instance.ConnectStatus = false;
+                        //MainForm.instance.ConnectStatus = false;
                         break;
                     }
                 }

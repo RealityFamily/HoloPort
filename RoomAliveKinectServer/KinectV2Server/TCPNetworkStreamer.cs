@@ -22,7 +22,7 @@ namespace KinectV2Server
             receivingMessageBuffer = new byte[MessageSize];
         }
 
-        public TcpClient client = null;
+        public UdpClient client = null;
         public NetworkStream stream = null;
 
         public int ID = 0; //counter of clients (each is unique)
@@ -90,20 +90,16 @@ namespace KinectV2Server
             }
         }
 
-        private TcpListener server;
+        private UdpClient server;
         private List<ClientState> clients = new List<ClientState>();
 
         public bool runningServer = false;
 
         public bool Connected { get { return clients.Count > 0; } }
 
-        // Thread signal.
-        public ManualResetEvent allDoneServer = new ManualResetEvent(false);
-        public ManualResetEvent allDoneClient = new ManualResetEvent(false);
-
         // Sending queue:
-        public delegate void ReceivedMessageEventHandler(object sender, ReceivedMessageEventArgs e);
-        public ReceivedMessageEventHandler ReceivedMessage;
+        //public delegate void ReceivedMessageEventHandler(object sender, ReceivedMessageEventArgs e);
+        //public ReceivedMessageEventHandler ReceivedMessage;
 
         public string name = "";
 
@@ -139,8 +135,6 @@ namespace KinectV2Server
         public void Close()
         {
             runningServer = false;
-            allDoneServer.Set();
-            allDoneClient.Set();
             foreach (ClientState cs in clients)
             {
                 cs.active = false;
@@ -180,7 +174,7 @@ namespace KinectV2Server
                 string localIP = "localhost";
                 foreach (IPAddress ip in host.AddressList)
                 {
-                    if (ip.AddressFamily == AddressFamily.InterNetwork)
+                    if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                     {
                         localIP = ip.ToString();
                         break;
@@ -189,17 +183,13 @@ namespace KinectV2Server
                 //Console.WriteLine("IP: " + localIP);
 
                 IPEndPoint listenEP = new IPEndPoint(IPAddress.Any, server_port);
-                server = new TcpListener(listenEP);
-                // Start listening for client requests.
-                server.Start();
+
+                server = new UdpClient(listenEP);
                 Print(name + " Server started " + localIP + ":" + server_port);
                 while (runningServer)
                 {
                     // Set the event to nonsignaled state.
-                    allDoneServer.Reset();
                     server.BeginAcceptTcpClient(new AsyncCallback(ClientHandlerServerSide), server);
-                    // Wait until a connection is made before continuing.
-                    allDoneServer.WaitOne();
                 }
             }
             catch (SocketException e)
@@ -211,7 +201,7 @@ namespace KinectV2Server
                 // Stop listening for new clients.
                 runningServer = false;
                 Print(name + " Server stopped!");
-                server.Stop();
+                server.Close();
             }
         }
 
