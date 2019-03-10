@@ -319,6 +319,9 @@
     <Reference Include="UnityEngine.SpatialTracking">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
+    <Reference Include="zlib.net">
+      <HintPath>C:/Users/User/Documents/GitHub/HoloPort/RoomAliveUnity/Assets/Packages/zlib.net.1.0.4.0/lib/zlib.net.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Analytics.Editor">
       <HintPath>C:/Users/User/Documents/GitHub/HoloPort/RoomAliveUnity/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
     </Reference>
@@ -327,9 +330,6 @@
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
       <HintPath>C:/Users/User/Documents/GitHub/HoloPort/RoomAliveUnity/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
-    </Reference>
-    <Reference Include="zlib.net">
-      <HintPath>C:/Users/User/Documents/GitHub/HoloPort/RoomAliveUnity/Assets/Packages/zlib.net.1.0.4.0/lib/zlib.net.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:/Program Files/Unity/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>

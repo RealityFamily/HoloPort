@@ -6,7 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace RoomAliveToolkit
 {
@@ -24,8 +26,8 @@ namespace RoomAliveToolkit
             receivingMessageBuffer = new byte[MessageSize];
         }
 
-        public TcpClient client = null;
-        public NetworkStream stream = null;
+        public UdpClient client = new UdpClient();
+        public IPEndPoint remoteIP = null;
 
         public int ID = 0; //counter of clients (each is unique)
         public int MessageSize = 10000000;
@@ -102,9 +104,7 @@ namespace RoomAliveToolkit
 
         public bool Connected { get { return clients.Count > 0; } }
 
-        // Thread signal.
-        public ManualResetEvent allDoneServer = new ManualResetEvent(false);
-        public ManualResetEvent allDoneClient = new ManualResetEvent(false);
+
 
         // Sending queue:
         public delegate void ReceivedMessageEventHandler(object sender, ReceivedMessageEventArgs e);
@@ -112,13 +112,11 @@ namespace RoomAliveToolkit
 
         public string name = "";
 
-        
+
 
         public void Close()
         {
             runningServer = false;
-            allDoneServer.Set();
-            allDoneClient.Set();
             foreach (ClientState cs in clients)
             {
                 cs.active = false;
@@ -127,10 +125,11 @@ namespace RoomAliveToolkit
 
         protected void Print(string message)
         {
-            if(callback!=null)
+            if (callback != null)
             {
                 callback.OnPrint(message);
-            }else
+            }
+            else
             {
                 Console.WriteLine(message);
             }
@@ -148,30 +147,33 @@ namespace RoomAliveToolkit
             }
         }
 
-        
+
 
         #region CLIENT SPECIFIC
 
-        public void ConnectToServerUDP()
-        {
-
-        }
+        //public void ConnectToServerUDP(string host, int port)
+        //{
+        //    Socket udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        //    IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(host), port);
+        //    byte[] data = Encoding.UTF8.GetBytes("Hello");
+        //    udpSocket.SendTo(data, SocketFlags.None, endPoint);
+        //}
 
 
         public void ConnectToSever(string host, int port)
         {
             if (!IsServer)
             {
-                // Connect asynchronously to the specifed host.
-                TcpClient client = new TcpClient(AddressFamily.InterNetwork);
-                IPHostEntry ipHostInfo = Dns.GetHostEntry(host); //localhost
-                IPAddress ipAddress = ipHostInfo.AddressList.Where(a => a.AddressFamily == AddressFamily.InterNetwork).First(); // OrDefault();
+                IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(host), port);
+                UdpClient client = new UdpClient();
+                client.Connect(host, port);
+                byte[] data = Encoding.UTF8.GetBytes("Hello");
 
-                Print("Establishing Connection to "+ host + " - "+ ipAddress + ":"+ port);
                 try
                 {
-                    client.BeginConnect(ipAddress, port, new AsyncCallback(ClientHandlerClientSide), client);
-
+                    client.Send(data, data.Length);
+                    Print("Establishing Connection to " + host + " - " + endPoint + ":" + port);
+                    ClientHandler(endPoint);
                 }
                 catch (Exception e)
                 {
@@ -184,22 +186,18 @@ namespace RoomAliveToolkit
             }
         }
 
-        private void ClientHandlerClientSide(IAsyncResult ar)
+        private void ClientHandler(IPEndPoint remoteIP)
         {
             try
             {
                 ClientState clientState = new ClientState();
-                clientState.client = (TcpClient)ar.AsyncState;
-                clientState.client.ReceiveBufferSize = bufferSize;
-                clientState.client.SendBufferSize = bufferSize;
-                clientState.client.EndConnect(ar);
-                clientState.stream = clientState.client.GetStream(); // Get a client stream for reading and writing.
+                clientState.remoteIP = remoteIP;
 
                 clients.Add(clientState);
 
                 Print("Connection established!");
 
-                RunClient(clientState);
+                new Thread(RunClient).Start(clientState);
             }
             catch (Exception e)
             {
@@ -210,78 +208,56 @@ namespace RoomAliveToolkit
         /// <summary>
         /// ClientThread (same for server and client)
         /// </summary>
-        /// <param name="clientState"></param>
-        private void RunClient(ClientState clientState)
+        /// <param name="state"></param>
+        private void RunClient(object clientState)
         {
-            clientState.active = true;
-            int bytesReceived = 0;
+            var state = clientState as ClientState;
+            state.active = true;
+
             byte[] bufferTmp = new byte[tmpBufferSize];
 
             // Loop to receive all the data sent by the client.
             try
             {
-                while (clientState.client.Connected && clientState.active)
+                while (state.active)
                 {
                     //both reading and writing to a network stream can happen concurrently, so we will do this through asynchronous calls
                     //send to them whatever you need to send
-                    if (clientState.readyToSend && clientState.stream.CanWrite && clientState.sendingMessageQueue.Count > 0)
+                    if (state.readyToSend && state.sendingMessageQueue.Count > 0)
                     {
                         byte[] sendBuffer;
-                        lock (clientState.sendingMessageQueue)
+                        lock (state.sendingMessageQueue)
                         {
-                            sendBuffer = clientState.sendingMessageQueue.Dequeue();
-                            
-                            clientState.readyToSend = false;
+                            sendBuffer = state.sendingMessageQueue.Dequeue();
+
+                            state.readyToSend = false;
                         }
                         // Send a message:
-                        clientState.stream.BeginWrite(sendBuffer, 0, sendBuffer.Length, new AsyncCallback(SendCallback), clientState);
+                        state.client.Send(sendBuffer, sendBuffer.Length, state.remoteIP);
                     }
 
-                    bytesReceived = 0;
 
-                    //read from them whatever you need to read from them
-                    while (clientState.stream.DataAvailable)
+                    state.client.Connect(state.remoteIP);
+                    IPEndPoint IPremote = null;
+                    while (state.client.Available > 0)
                     {
-                        // Translate data bytes to a ASCII string.
-                        bytesReceived = clientState.stream.Read(bufferTmp, 0, bufferTmp.Length);
-                        ProcessReceivedBuffer(bufferTmp, bytesReceived, clientState);
+                        bufferTmp = state.client.Receive(ref IPremote);
+                        ProcessReceivedBuffer(bufferTmp, bufferTmp.Length, state);
                     }
-                    Thread.Sleep(0);
+
+
+
                 }
             }
             catch (Exception e)
             {
-                PrintError("Client "+ clientState.ID + " Exception: Unable to write to socket (beginAsync): "+e);
+                PrintError("Client " + state.ID + " Exception: Unable to write to socket (beginAsync): " + e);
             }
 
-            Print("Client "+ clientState.ID + " disconnected.");
-
-            // Shutdown and end connection
-            clientState.stream.Close();
-            clientState.client.Close();
+            Print("Client " + state.ID + " disconnected.");
 
             //should probably check if this one is in the list
-            clients.Remove(clientState);
-        }
-
-        private void SendCallback(IAsyncResult ar)
-        {
-            var clientState = (ClientState)ar.AsyncState;
-
-            try
-            {
-                clientState.stream.EndWrite(ar);
-            }
-            catch (Exception)
-            {
-                Print("Client "+ clientState.ID + " Exception: Unable to write to socket (endAsync).");
-                //Console.WriteLine("Client {0} Exception: {1}", clientState.ID, e);
-                clientState.active = false;
-            }
-            clientState.readyToSend = true;
-#if VERBOSE
-            Console.WriteLine("Sent message to client: " + clientState.client.Client.RemoteEndPoint);
-#endif
+            clients.Remove(state);
         }
 
         //there is no guarrantee that the message will be transferred in one packet, so we need to assemble a buffer and keep track on where it is.
@@ -345,9 +321,9 @@ namespace RoomAliveToolkit
             {
                 if (state.ID == clientID)
                 {
-                    Print("Closing client "+ clientID + "...");
+                    Print("Closing client " + clientID + "...");
                     state.active = false;
-                    
+
                 }
             }
         }
@@ -355,7 +331,7 @@ namespace RoomAliveToolkit
         {
             foreach (ClientState state in clients)
             {
-                Print(this.name+" Closing client "+ state.ID + "...");
+                Print(this.name + " Closing client " + state.ID + "...");
                 state.active = false;
             }
             clients.Clear();

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 using RoomAliveToolkit.Images;
+using zlib;
 
 namespace RoomAliveToolkit
 {
@@ -391,7 +392,7 @@ namespace RoomAliveToolkit
             }
 
             DepthSpaceToCameraSpaceTable = new Float2Image(depthWidth, depthHeight);
-            //makeConfigurationRequests = !localConfig;
+            makeConfigurationRequests = !localConfig;
             if (localConfig)
             {
                 DepthSpaceToCameraSpaceTable.LoadFromFile(localCalibrationFilename + "_DepthToCameraTable.bin");
@@ -462,6 +463,10 @@ namespace RoomAliveToolkit
             }
             else
             {
+
+                var udpClient = new TCPNetworkStreamer();
+                 //udpClient.ConnectToServerUDP(serverIPAddress, 5000);
+
                 //connect to the configuration server
                 if(!localConfig)
                 {
@@ -896,7 +901,7 @@ namespace RoomAliveToolkit
             }
             else
             {
-                makeConfigurationRequests = false;
+                //makeConfigurationRequests = false;
                 if (makeConfigurationRequests && !StreamFromFile)
                 {
                     byte[] b = new byte[1];
@@ -1113,8 +1118,8 @@ namespace RoomAliveToolkit
             {
                 byte type = e.data[0];
                 Debug.Log("Received message from configuration server. Type: " + type + " Size " + e.data.Length + " bytes");
-                if (type == (byte)1) { 
-                
+                if (type == (byte)1) {
+                    //byte[] kek  = 
                     DepthSpaceToCameraSpaceTable.FromByteArray(e.data,1);
                     depthToCameraSpaceTableUpdateCount++;
                 

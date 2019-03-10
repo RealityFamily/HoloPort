@@ -323,6 +323,15 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
+    <Reference Include="DotNetZip">
+      <HintPath>C:/Users/User/Documents/GitHub/HoloPort/RoomAliveUnity/Assets/NuGet/Editor/DotNetZip.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGetForUnity">
+      <HintPath>C:/Users/User/Documents/GitHub/HoloPort/RoomAliveUnity/Assets/NuGet/Editor/NuGetForUnity.dll</HintPath>
+    </Reference>
+    <Reference Include="zlib.net">
+      <HintPath>C:/Users/User/Documents/GitHub/HoloPort/RoomAliveUnity/Assets/Packages/zlib.net.1.0.4.0/lib/zlib.net.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>C:/Users/User/Documents/GitHub/HoloPort/RoomAliveUnity/Library/PackageCache/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
@@ -337,15 +346,6 @@
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>C:/Users/User/Documents/GitHub/HoloPort/RoomAliveUnity/Library/PackageCache/com.unity.purchasing@2.0.3/Editor/UnityEditor.Purchasing.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGetForUnity">
-      <HintPath>C:/Users/User/Documents/GitHub/HoloPort/RoomAliveUnity/Assets/NuGet/Editor/NuGetForUnity.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetZip">
-      <HintPath>C:/Users/User/Documents/GitHub/HoloPort/RoomAliveUnity/Assets/NuGet/Editor/DotNetZip.dll</HintPath>
-    </Reference>
-    <Reference Include="zlib.net">
-      <HintPath>C:/Users/User/Documents/GitHub/HoloPort/RoomAliveUnity/Assets/Packages/zlib.net.1.0.4.0/lib/zlib.net.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
