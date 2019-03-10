@@ -228,7 +228,7 @@ namespace KinectV2Server
             colorServer = new TCPNetworkStreamer(true, settings.colorPort, "Color");
             configurationServer = new TCPNetworkStreamer(true, settings.configurationPort, "Configuration");
             configurationServer.ReceivedMessage += new TCPNetworkStreamer.ReceivedMessageEventHandler(ReceiveConfigurationRequest);
-
+            
             Thread t1 = new Thread(ProcessingThread);
             t1.Start();
 

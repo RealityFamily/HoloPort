@@ -3,9 +3,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 
 namespace KinectV2Server
@@ -22,8 +24,8 @@ namespace KinectV2Server
             receivingMessageBuffer = new byte[MessageSize];
         }
 
-        public UdpClient client = null;
-        public NetworkStream stream = null;
+        public UdpClient client = new UdpClient();
+        public IPEndPoint remoteIP = null;
 
         public int ID = 0; //counter of clients (each is unique)
         public int MessageSize = 1000;
@@ -98,8 +100,8 @@ namespace KinectV2Server
         public bool Connected { get { return clients.Count > 0; } }
 
         // Sending queue:
-        //public delegate void ReceivedMessageEventHandler(object sender, ReceivedMessageEventArgs e);
-        //public ReceivedMessageEventHandler ReceivedMessage;
+        public delegate void ReceivedMessageEventHandler(object sender, ReceivedMessageEventArgs e);
+        public ReceivedMessageEventHandler ReceivedMessage;
 
         public string name = "";
 
@@ -143,10 +145,11 @@ namespace KinectV2Server
 
         protected void Print(string message)
         {
-            if(callback!=null)
+            if (callback != null)
             {
                 callback.OnPrint(message);
-            }else
+            }
+            else
             {
                 Console.WriteLine(message);
             }
@@ -164,7 +167,6 @@ namespace KinectV2Server
             }
         }
 
-        #region SERVER SPECIFIC
         private void StartServer()
         {
             try
@@ -186,15 +188,20 @@ namespace KinectV2Server
 
                 server = new UdpClient(listenEP);
                 Print(name + " Server started " + localIP + ":" + server_port);
+                IPEndPoint remoteIp = null;
                 while (runningServer)
                 {
-                    // Set the event to nonsignaled state.
-                    server.BeginAcceptTcpClient(new AsyncCallback(ClientHandlerServerSide), server);
+                    byte[] data = server.Receive(ref remoteIp);
+                    string message = Encoding.UTF8.GetString(data);
+                    if (message == "Hello")
+                    {
+                        ClientHandler(remoteIp);
+                    }
                 }
             }
             catch (SocketException e)
             {
-                PrintError(name + " Server SocketException: "+e);
+                PrintError(name + " Server SocketException: " + e);
             }
             finally
             {
@@ -205,80 +212,21 @@ namespace KinectV2Server
             }
         }
 
-        private void ClientHandlerServerSide(IAsyncResult ar)
+        private void ClientHandler(IPEndPoint ClientInfo)
         {
-            TcpListener server = (TcpListener)ar.AsyncState;
-
             ClientState clientState = new ClientState();
             clients.Add(clientState);
             try
             {
-                clientState.client = server.EndAcceptTcpClient(ar);
-                clientState.client.ReceiveBufferSize = bufferSize;
-                clientState.client.SendBufferSize = bufferSize;
-                clientState.stream = clientState.client.GetStream();
-                allDoneServer.Set();
+                clientState.remoteIP = ClientInfo;
 
-                Print(name + " Server connected new client: " + clientState.client.Client.RemoteEndPoint);
+                Print(name + " Server connected new client: " + clientState.remoteIP.Address.ToString());
 
                 RunClient(clientState);
             }
-            catch (ObjectDisposedException )
+            catch (ObjectDisposedException)
             {
                 PrintError(name + " Server must have closed. Aborting waiting for clients!");
-            }
-        }
-        #endregion SERVER SPECIFIC
-
-        #region CLIENT SPECIFIC
-
-        public void ConnectToSever(string host, int port)
-        {
-            if (!IsServer)
-            {
-                // Connect asynchronously to the specifed host.
-                TcpClient client = new TcpClient(AddressFamily.InterNetwork);
-                IPHostEntry ipHostInfo = Dns.GetHostEntry(host); //localhost
-                IPAddress ipAddress = ipHostInfo.AddressList.Where(a => a.AddressFamily == AddressFamily.InterNetwork).First(); // OrDefault();
-                IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);
-
-                Print("Establishing Connection to "+ host + " - "+ ipAddress + ":"+ port);
-                try
-                {
-                    client.BeginConnect(ipAddress, port, new AsyncCallback(ClientHandlerClientSide), client);
-
-                }
-                catch (Exception e)
-                {
-                    PrintError("Connecting to server failed: " + e.Message);
-                }
-            }
-            else
-            {
-                PrintError("ConnectToServer Error! This TCPNetworkStreamer is configured to run as a server!");
-            }
-        }
-
-        private void ClientHandlerClientSide(IAsyncResult ar)
-        {
-            try
-            {
-                ClientState clientState = new ClientState();
-                clientState.client = (TcpClient)ar.AsyncState;
-                clientState.client.ReceiveBufferSize = bufferSize;
-                clientState.client.SendBufferSize = bufferSize;
-                clientState.client.EndConnect(ar);
-                clientState.stream = clientState.client.GetStream(); // Get a client stream for reading and writing.
-
-                clients.Add(clientState);
-
-                Print("Connection established!");
-
-                RunClient(clientState);
-            }
-            catch (Exception e)
-            {
-                PrintError("Connecting to server failed: " + e.Message);
             }
         }
 
@@ -286,80 +234,64 @@ namespace KinectV2Server
         /// ClientThread (same for server and client)
         /// </summary>
         /// <param name="clientState"></param>
-        private void RunClient(ClientState clientState)
+        private async void RunClient(object State)
         {
+            ClientState clientState = State as ClientState;
+
             clientState.active = true;
-            int bytesReceived = 0;
             byte[] bufferTmp = new byte[tmpBufferSize];
 
             // Loop to receive all the data sent by the client.
             try
             {
-                while (clientState.client.Connected && clientState.active)
+                while (clientState.active)
                 {
                     //both reading and writing to a network stream can happen concurrently, so we will do this through asynchronous calls
                     //send to them whatever you need to send
-                    if (clientState.readyToSend && clientState.stream.CanWrite && clientState.sendingMessageQueue.Count > 0)
+                    if (clientState.readyToSend && clientState.sendingMessageQueue.Count > 0)
                     {
                         byte[] sendBuffer;
                         lock (clientState.sendingMessageQueue)
                         {
                             sendBuffer = clientState.sendingMessageQueue.Dequeue();
-                            
+
+                            MemoryStream output = new MemoryStream();
+                            using (DeflateStream dstream = new DeflateStream(output, CompressionLevel.Optimal))
+                            {
+                                dstream.Write(sendBuffer, 0, sendBuffer.Length);
+                            }
+                            sendBuffer = output.ToArray();
+
                             clientState.readyToSend = false;
                         }
                         // Send a message:
-                        clientState.stream.BeginWrite(sendBuffer, 0, sendBuffer.Length, new AsyncCallback(SendCallback), clientState);
+
+                        await clientState.client.SendAsync(sendBuffer, sendBuffer.Length, clientState.remoteIP);
+                        Print("message sent");
                     }
 
-                    bytesReceived = 0;
-
-                    //read from them whatever you need to read from them
-                    while (clientState.stream.DataAvailable)
+                    IPEndPoint iPEnd = null;
+                    while (clientState.client.Available > 0)
                     {
-                        // Translate data bytes to a ASCII string.
-                        bytesReceived = clientState.stream.Read(bufferTmp, 0, bufferTmp.Length);
-                        ProcessReceivedBuffer(bufferTmp, bytesReceived, clientState);
+                        clientState.client.Connect(clientState.remoteIP);
+                        bufferTmp = clientState.client.Receive(ref iPEnd);
+                        ProcessReceivedBuffer(bufferTmp, bufferTmp.Length, clientState);
                     }
+
                     Thread.Sleep(0);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 //PrintError("Client "+ clientState.ID + " Exception: Unable to write to socket (beginAsync): "+e);
             }
 
-            Print("Client "+ clientState.ID + " disconnected.");
-
-            // Shutdown and end connection
-            clientState.stream.Close();
-            clientState.client.Close();
+            Print("Client " + clientState.ID + " disconnected.");
 
             //should probably check if this one is in the list
             clients.Remove(clientState);
         }
 
-        private void SendCallback(IAsyncResult ar)
-        {
-            var clientState = (ClientState)ar.AsyncState;
-
-            try
-            {
-                clientState.stream.EndWrite(ar);
-            }
-            catch (Exception)
-            {
-                Print("Client "+ clientState.ID + " Exception: Unable to write to socket (endAsync).");
-                //Console.WriteLine("Client {0} Exception: {1}", clientState.ID, e);
-                clientState.active = false;
-            }
-            clientState.readyToSend = true;
-#if VERBOSE
-            Console.WriteLine("Sent message to client: " + clientState.client.Client.RemoteEndPoint);
-#endif
-        }
-
-        //there is no guarrantee that the message will be transferred in one packet, so we need to assemble a buffer and keep track on where it is.
         private void ProcessReceivedBuffer(byte[] buffer, int bytesReceived, ClientState clientState)
         {
 
@@ -412,7 +344,6 @@ namespace KinectV2Server
                 ProcessReceivedBuffer(newBuffer, bytesReceived - copyLen, clientState);
             }
         }
-        #endregion CLIENT SPECIFIC
 
         public void CloseClient(int clientID)
         {
@@ -420,9 +351,9 @@ namespace KinectV2Server
             {
                 if (state.ID == clientID)
                 {
-                    Print("Closing client "+ clientID + "...");
+                    Print("Closing client " + clientID + "...");
                     state.active = false;
-                    
+
                 }
             }
         }
@@ -430,7 +361,7 @@ namespace KinectV2Server
         {
             foreach (ClientState state in clients)
             {
-                Print(this.name+" Closing client "+ state.ID + "...");
+                Print(this.name + " Closing client " + state.ID + "...");
                 state.active = false;
             }
             clients.Clear();
