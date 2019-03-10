@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.WSA;
-
 public class HoloConnection : MonoBehaviour
 {
     public UnityEngine.UI.InputField adress;
@@ -16,6 +15,7 @@ public class HoloConnection : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         StartCoroutine(LoadDevice("WindowsMR"));
+       
     }
 
     private static IEnumerator LoadDevice(string newDevice)
