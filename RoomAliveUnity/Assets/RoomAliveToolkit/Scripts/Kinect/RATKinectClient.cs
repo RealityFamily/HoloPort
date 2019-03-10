@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 using RoomAliveToolkit.Images;
+using zlib;
 
 namespace RoomAliveToolkit
 {
@@ -32,7 +33,7 @@ namespace RoomAliveToolkit
         /// Name of the Kinect camera in the calibration file
         /// </summary>
         public string nameInConfiguration = "0";
-        private bool makeConfigurationRequests = true;
+        private bool makeConfigurationRequests = false;
         /// <summary>
         /// Filename of the local calibration file in case one is not connecting to the Kinect server. I.e., one is not running Kinect feed live. 
         /// </summary>
@@ -462,6 +463,10 @@ namespace RoomAliveToolkit
             }
             else
             {
+
+                var udpClient = new TCPNetworkStreamer();
+                 //udpClient.ConnectToServerUDP(serverIPAddress, 5000);
+
                 //connect to the configuration server
                 if(!localConfig)
                 {
@@ -896,6 +901,7 @@ namespace RoomAliveToolkit
             }
             else
             {
+                //makeConfigurationRequests = false;
                 if (makeConfigurationRequests && !StreamFromFile)
                 {
                     byte[] b = new byte[1];
@@ -945,36 +951,6 @@ namespace RoomAliveToolkit
                     fpsKinectColor.Tick();
                 }
                 
-                //AUDIO
-                if (nextAudioFrameReady.WaitOne(1))
-                {
-                    AudioFrame frame;
-                    while (audioFrameQueue.Count > 0)
-                    {
-                        lock (audioFrameQueue) frame = audioFrameQueue.Dequeue();
-
-                        if (this.gameObject.GetComponent<AudioSource>() != null &&
-                            this.gameObject.GetComponent<AudioSource>().clip != null) 
-                        {
-                            // Enqueue audio frame for playback
-                            _PlayAudioFrame16(frame.audioData);
-
-                            // Print a warning in case of audio playback buffer underrun
-                            //if (audioPlaybackBufferUnderrun) Debug.LogWarning("Audio playback buffer underrun!");
-                        }
-                        fpsKinectAudio.Tick();
-                    }
-                }
-
-                //SKELETON
-                if (nextSkeletonFrameReady.WaitOne(1))
-                {
-                    
-                    lock (nextSkeletonFrame)
-                        Swap<KinectSkeletonFrame>(ref nextSkeletonFrame, ref currentSkeletonFrame);
-
-                    fpsKinectSkeleton.Tick();
-                }
             }
             updateFPS = (float)fpsUpdate.Framerate;
             depthFPS = (float)fpsKinectDepth.Framerate;
@@ -1130,18 +1106,7 @@ namespace RoomAliveToolkit
             reader.Close();
         }
 
-        private void RemoteComputer_NewFlowFrame(object sender, ReceivedMessageEventArgs e)
-        {
-            Debug.LogError("Someone tried to call RemoteComputer_NewFlowFrame: Not Implemented Yet!");
-            throw new NotImplementedException();
-        }
-
-        private void RemoteComputer_NewIRFrame(object sender, ReceivedMessageEventArgs e)
-        {
-            Debug.LogError("Someone tried to call RemoteComputer_NewIRFrame: Not Implemented Yet!");
-            throw new NotImplementedException();
-        }
-
+    
         private void RemoteComputer_NewConfigurationFrame(object sender, ReceivedMessageEventArgs e)
         {
             //protocol is: 
@@ -1153,11 +1118,11 @@ namespace RoomAliveToolkit
             {
                 byte type = e.data[0];
                 Debug.Log("Received message from configuration server. Type: " + type + " Size " + e.data.Length + " bytes");
-                if (type == (byte)1) { 
-                
+                if (type == (byte)1) {
+                    //byte[] kek  = 
                     DepthSpaceToCameraSpaceTable.FromByteArray(e.data,1);
                     depthToCameraSpaceTableUpdateCount++;
-               
+                
                     if (StreamToFile) //record this info for playback
                     {
                         Debug.Log("Saving DepthSpaceToCameraSpaceTable to file: " + depthToCameraTablePath);
@@ -1181,9 +1146,9 @@ namespace RoomAliveToolkit
                         byte[] a = new byte[1];
                         a[0] = 1; //request DepthSpaceToCameraSpaceTable
                         configurationClient.SendMessageToAllClients(a);
-
+                
                         
-
+                
                         if (StreamToFile) //record this information for playback
                         {
                             Debug.Log("Saving Kinect2Calibration to file: " + kinectCalibrationPath);

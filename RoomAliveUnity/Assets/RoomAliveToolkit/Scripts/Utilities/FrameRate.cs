@@ -62,5 +62,8 @@ namespace RoomAliveToolkit.Images
 
         [DllImport("kernel32.dll")]
         extern static short QueryPerformanceFrequency(ref long x);
+
+
+
     }
 }
