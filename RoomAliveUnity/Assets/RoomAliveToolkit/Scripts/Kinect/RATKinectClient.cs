@@ -24,6 +24,10 @@ namespace RoomAliveToolkit
     /// </summary>
     public class RATKinectClient : RATSkeletonProvider
     {
+        public UnityEngine.UI.InputField kinnectField;
+
+        private string serverIPAddress;
+
         /// <summary>
         /// Calibration data asset. This is a component of the scene where the XML calibration file is read that is acquired by the room calibration routines. See CalibrateEnsamble example in RoomAlive Toolkit. 
         /// </summary>
@@ -53,11 +57,8 @@ namespace RoomAliveToolkit
 
 
 
-        [Space(10)]
-        /// <summary>
-        /// Name/IP address of the KinectV2Server. 
-        /// </summary>
-        public string serverIPAddress = "localhost";
+     
+       
 
         [Space(10)]
         public bool StreamDepth = true;
@@ -256,6 +257,7 @@ namespace RoomAliveToolkit
 
         public void Awake() //guaranteed to be executed before any Start functions
         {
+            serverIPAddress = kinnectField.text;
             // Create a depth texture
             DepthTexture = new Texture2D(depthWidth / 2, depthHeight, TextureFormat.ARGB32, false, true);
             DepthTexture.filterMode = FilterMode.Point;
