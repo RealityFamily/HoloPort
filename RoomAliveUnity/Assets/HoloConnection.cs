@@ -7,6 +7,9 @@ using UnityEngine.XR.WSA;
 public class HoloConnection : MonoBehaviour
 {
     public UnityEngine.UI.InputField adress;
+    public GameObject kinect;
+    private int kinectClickCounter = 0 ;
+
     private void Start()
     {
         StartCoroutine(LoadingWindowsMrWrapper());
@@ -35,4 +38,12 @@ public class HoloConnection : MonoBehaviour
         HolographicRemoting.Disconnect();
     }
 
+    public void HandleIpKinenct()
+    {
+        if (kinectClickCounter < 1)
+        {
+            kinect.active = true;
+        }
+        kinectClickCounter++;
+    }
 }
