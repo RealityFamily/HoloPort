@@ -112,34 +112,7 @@ namespace RoomAliveToolkit
 
         public string name = "";
 
-        public TCPNetworkStreamer()
-        {
-        }
-
-        public TCPNetworkStreamer(bool _isServer, int _port)
-        {
-            isServer = _isServer;
-            server_port = _port;
-            if (isServer)
-            {
-                runningServer = true;
-                Thread listenerT = new Thread(StartServer);
-                listenerT.Start();
-            }
-        }
-
-        public TCPNetworkStreamer(bool _isServer, int _port, string _name)
-        {
-            name = _name;
-            isServer = _isServer;
-            server_port = _port;
-            if (isServer)
-            {
-                runningServer = true;
-                Thread listenerT = new Thread(StartServer);
-                listenerT.Start();
-            }
-        }
+        
 
         public void Close()
         {
@@ -175,77 +148,15 @@ namespace RoomAliveToolkit
             }
         }
 
-        #region SERVER SPECIFIC
-        private void StartServer()
-        {
-            try
-            {
-                // Get our own IP address for display
-                IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
-                string localIP = "localhost";
-                foreach (IPAddress ip in host.AddressList)
-                {
-                    if (ip.AddressFamily == AddressFamily.InterNetwork)
-                    {
-                        localIP = ip.ToString();
-                        break;
-                    }
-                }
-                //Console.WriteLine("IP: " + localIP);
-
-                IPEndPoint listenEP = new IPEndPoint(IPAddress.Any, server_port);
-                server = new TcpListener(listenEP);
-                // Start listening for client requests.
-                server.Start();
-                Print(name + " Server started " + localIP + ":" + server_port);
-                while (runningServer)
-                {
-                    // Set the event to nonsignaled state.
-                    allDoneServer.Reset();
-                    server.BeginAcceptTcpClient(new AsyncCallback(ClientHandlerServerSide), server);
-                    // Wait until a connection is made before continuing.
-                    allDoneServer.WaitOne();
-                }
-            }
-            catch (SocketException e)
-            {
-                PrintError(name + " Server SocketException: "+e);
-            }
-            finally
-            {
-                // Stop listening for new clients.
-                runningServer = false;
-                Print(name + " Server stopped!");
-                server.Stop();
-            }
-        }
-
-        private void ClientHandlerServerSide(IAsyncResult ar)
-        {
-            TcpListener server = (TcpListener)ar.AsyncState;
-
-            ClientState clientState = new ClientState();
-            clients.Add(clientState);
-            try
-            {
-                clientState.client = server.EndAcceptTcpClient(ar);
-                clientState.client.ReceiveBufferSize = bufferSize;
-                clientState.client.SendBufferSize = bufferSize;
-                clientState.stream = clientState.client.GetStream();
-                allDoneServer.Set();
-
-                Print(name + " Server connected new client: " + clientState.client.Client.RemoteEndPoint);
-
-                RunClient(clientState);
-            }
-            catch (ObjectDisposedException )
-            {
-                PrintError(name + " Server must have closed. Aborting waiting for clients!");
-            }
-        }
-        #endregion SERVER SPECIFIC
+        
 
         #region CLIENT SPECIFIC
+
+        public void ConnectToServerUDP()
+        {
+
+        }
+
 
         public void ConnectToSever(string host, int port)
         {
