@@ -115,10 +115,8 @@ namespace KinectV2Server
         FrameRate fpsRendering = new FrameRate(1);
         FrameRate fpsServerDepth = new FrameRate(1);
         FrameRate fpsServerColor = new FrameRate(1);
-        FrameRate fpsServerAudio = new FrameRate(1);
         FrameRate fpsKinectDepth = new FrameRate(1);
         FrameRate fpsKinectColor = new FrameRate(1);
-        FrameRate fpsServerSkeleton = new FrameRate(1);
 
 
         //Skeleton / Body Handling

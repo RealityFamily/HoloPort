@@ -7,6 +7,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using QuickNet;
+using QuicNet;
+using QuicNet.Connections;
 
 namespace KinectV2Server
 {
@@ -22,7 +25,7 @@ namespace KinectV2Server
             receivingMessageBuffer = new byte[MessageSize];
         }
 
-        public TcpClient client = null;
+        public QuicClient client = null;
         public NetworkStream stream = null;
 
         public int ID = 0; //counter of clients (each is unique)
@@ -90,7 +93,7 @@ namespace KinectV2Server
             }
         }
 
-        private TcpListener server;
+        private QuicListener server;
         private List<ClientState> clients = new List<ClientState>();
 
         public bool runningServer = false;
@@ -188,8 +191,8 @@ namespace KinectV2Server
                 }
                 //Console.WriteLine("IP: " + localIP);
 
-                IPEndPoint listenEP = new IPEndPoint(IPAddress.Any, server_port);
-                server = new TcpListener(listenEP);
+                //IPEndPoint listenEP = new IPEndPoint(IPAddress.Any, server_port);
+                server = new QuicListener(server_port);
                 // Start listening for client requests.
                 server.Start();
                 Print(name + " Server started " + localIP + ":" + server_port);
@@ -197,6 +200,7 @@ namespace KinectV2Server
                 {
                     // Set the event to nonsignaled state.
                     allDoneServer.Reset();
+                    QuicConnection client = server.AcceptQuicClient();
                     server.BeginAcceptTcpClient(new AsyncCallback(ClientHandlerServerSide), server);
                     // Wait until a connection is made before continuing.
                     allDoneServer.WaitOne();

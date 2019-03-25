@@ -1,0 +1,576 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1563254031064528}
+  m_IsPrefabParent: 1
+--- !u!1 &1010410954455512
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4906214865526356}
+  - component: {fileID: 114811441403268894}
+  m_Layer: 0
+  m_Name: GestureManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1161521752679690
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4599683445233324}
+  - component: {fileID: 114212558053246842}
+  m_Layer: 0
+  m_Name: ClickerGestureRecognizer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1563254031064528
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4220867044626698}
+  m_Layer: 0
+  m_Name: Gesture
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1766743270988530
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4735613330141436}
+  - component: {fileID: 114911403113868006}
+  m_Layer: 0
+  m_Name: GesturesHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1814838027072006
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4800223305465674}
+  - component: {fileID: 114938658322913490}
+  m_Layer: 0
+  m_Name: HandGestureRecognizer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4220867044626698
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1563254031064528}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4906214865526356}
+  - {fileID: 4735613330141436}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4599683445233324
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1161521752679690}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4906214865526356}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4735613330141436
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1766743270988530}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4220867044626698}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4800223305465674
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1814838027072006}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4906214865526356}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4906214865526356
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1010410954455512}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4800223305465674}
+  - {fileID: 4599683445233324}
+  m_Father: {fileID: 4220867044626698}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114212558053246842
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1161521752679690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b12b002ad0b2da64a894a72ff0db61f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _editorEmulationData:
+    _emulationKey: 324
+    _emulationSource: 3
+    _doubleTapDelay: 0.2
+    _holdDelay: 0.3
+    _navigationZAxisMultiplier: 0.1
+    _navigationXYAxisMultiplier: 6
+  _startOnAwake: 1
+  _recognizableGestures: 48
+  RecognitionStarted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnRecognitionStarted
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+RecognitionStartedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  RecognitionEnded:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnRecognitionEnded
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+RecognitionEndedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  GestureError:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnGestureError
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+GestureErrorEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  Tapped:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+TappedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  HoldStarted:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+HoldStartedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  HoldCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+HoldCompletedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  HoldCanceled:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+HoldCanceledEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  ManipulationStarted:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+ManipulationStartedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  ManipulationUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+ManipulationUpdatedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  ManipulationCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+ManipulationCompletedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  ManipulationCanceled:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+ManipulationCanceledEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  NavigationStarted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnNavigationStarted
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+NavigationStartedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  NavigationUpdated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnNavigationUpdated
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+NavigationUpdatedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  NavigationCompleted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnNavigationCompleted
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+NavigationCompletedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  NavigationCanceled:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnNavigationCanceled
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+NavigationCanceledEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+--- !u!114 &114811441403268894
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1010410954455512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dd46ba7139d73b4ab1f48e302b1333c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _handGestureRecognizer: {fileID: 114938658322913490}
+  _clickerGestureRecognizer: {fileID: 114212558053246842}
+--- !u!114 &114911403113868006
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1766743270988530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fc3cb99e4152b142af5c269b318a66b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interactMask:
+    serializedVersion: 2
+    m_Bits: 2147483955
+--- !u!114 &114938658322913490
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1814838027072006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b12b002ad0b2da64a894a72ff0db61f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _editorEmulationData:
+    _emulationKey: 323
+    _emulationSource: 1
+    _doubleTapDelay: 0.2
+    _holdDelay: 0.3
+    _navigationZAxisMultiplier: 0.1
+    _navigationXYAxisMultiplier: 6
+  _startOnAwake: 1
+  _recognizableGestures: 9
+  RecognitionStarted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnRecognitionStarted
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+RecognitionStartedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  RecognitionEnded:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnRecognitionEnded
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+RecognitionEndedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  GestureError:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnGestureError
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+GestureErrorEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  Tapped:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnTapped
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+TappedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  HoldStarted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnHoldStarted
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+HoldStartedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  HoldCompleted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnHoldCompleted
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+HoldCompletedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  HoldCanceled:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnHoldCanceled
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+HoldCanceledEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  ManipulationStarted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnManipulationStarted
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+ManipulationStartedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  ManipulationUpdated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnManipulationUpdated
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+ManipulationUpdatedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  ManipulationCompleted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnManipulationCompleted
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+ManipulationCompletedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  ManipulationCanceled:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114911403113868006}
+        m_MethodName: OnManipulationCanceled
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+ManipulationCanceledEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  NavigationStarted:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+NavigationStartedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  NavigationUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+NavigationUpdatedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  NavigationCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+NavigationCompletedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  NavigationCanceled:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: HoloGroup.UserInteraction.Input.Gesture.GestureRecognizer+NavigationCanceledEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null

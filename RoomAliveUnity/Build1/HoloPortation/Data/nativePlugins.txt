@@ -1,0 +1,6 @@
+PerceptionRemotingPlugin.dll
+msvcrt.dll
+AudioPluginMsHRTF.dll
+Microsoft.Perception.Simulation.dll
+HolographicStreamer.dll
+kernel32.dll
