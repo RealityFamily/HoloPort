@@ -18,7 +18,7 @@ public class DefaultUDP : ICustomUDP
         {
             var dict = new Dictionary<string, QosType>
             {
-                { "UnreliableChanel", QosType.Unreliable },
+                { "UnreliableChanel", QosType.Reliable },
                 { "ReliableSequencedChanel", QosType.ReliableSequenced },
                 { "UnreliableFragmented", QosType.UnreliableFragmented }
             };

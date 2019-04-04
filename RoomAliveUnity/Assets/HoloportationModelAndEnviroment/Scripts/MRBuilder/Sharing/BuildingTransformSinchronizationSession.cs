@@ -14,6 +14,8 @@ public class EnviromentSinchronizationSession : SessionBehaviour
     private Vector3 _lastScale;
     private Quaternion _lastRotation;
 
+    private TCPsocket _audioClient;
+
 
     public override void OnSessionStart()
     {
@@ -34,6 +36,7 @@ public class EnviromentSinchronizationSession : SessionBehaviour
     public override void OnConnect(string connectionIP, int connectionID)
     {
         _remoteMachineConnectionID = connectionID;
+        _audioClient = new TCPsocket(new AudioClient(), ETcpSocketType.Socket, 25734, connectionIP);
     }
 
     public override void OnSessionUpdate()

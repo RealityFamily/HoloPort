@@ -66,7 +66,7 @@ namespace HoloGroup.UserInteraction.Input.Gaze
             }
         }
 
-        private Camera _mainCamera;
+        private Camera _mainCamera = Camera.main;
 
         private AverageRaycaster _averageRaycaster = new AverageRaycaster(6);
 
@@ -77,7 +77,6 @@ namespace HoloGroup.UserInteraction.Input.Gaze
 
         public void ProcessGaze(LayerMask interactMask, float maxRayDistance, LayerMask collideMask, bool raycastToGraphic, ref bool hasHit, ref bool isGraphicHit, ref Vector3 hitPoint, ref Vector3 hitNormal, ref GameObject gazedObject)
         {
-            _mainCamera = Camera.main;
             _pointerEventData.position = new Vector2(Screen.width / 2f, Screen.height / 2f);
 
             // First we need to simple raycast.

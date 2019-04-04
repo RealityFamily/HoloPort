@@ -3,7 +3,6 @@ using MRBuilder.Architecture;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Configurator : MonoSingleton<Configurator>
 {
@@ -11,7 +10,6 @@ public class Configurator : MonoSingleton<Configurator>
     public AudioStreamer AudioStreamer;
 
     private string RemouteMachineIP;
-    public InputField RemouteMachineField;
 
     public EnviromentSinchronizationSession SyncEnviromentSession;
 
@@ -28,8 +26,8 @@ public class Configurator : MonoSingleton<Configurator>
         SyncEnviromentSession.ConnectTo(RemouteMachineIP, 55538);
 
 
-        AudioStreamer.Init();
-        AudioStreamer.StartRecording();
+        //AudioStreamer.Init();
+        //AudioStreamer.StartRecording();
     }
 
     private void CreateModel()
@@ -38,13 +36,21 @@ public class Configurator : MonoSingleton<Configurator>
         BuildingManager.Instance.MakeBuilding(factory.MakeModel(TestModelTransform, "TestModel", true));
     }
 
-    public void GetIPAdress()
+    public UnityEngine.UI.InputField adress;
+    public GameObject HoloModel;
+    private int kinectClickCounter = 0;
+
+    public void GetIpAdress()
     {
-        if (RemouteMachineField.text != "")
+        if (kinectClickCounter < 1)
         {
-            RemouteMachineIP = RemouteMachineField.text;
-            gameObject.SetActive(true);
+            if (adress.text != "")
+            {
+                RemouteMachineIP = adress.text;
+                HoloModel.active = true;
+            }
         }
+        kinectClickCounter++;
     }
 
 }

@@ -28,7 +28,6 @@ namespace RoomAliveToolkit
         [XmlIgnoreAttribute]
         public bool silent = false;
 
-        
         public void RecoverCalibrationFromSensor(KinectSensor kinectSensor)
         {
             colorCameraMatrix = new RoomAliveToolkit.Matrix(3, 3);
@@ -644,5 +643,9 @@ namespace RoomAliveToolkit
             // convert back to Y down
             depthY = depthImageHeight - depthY;
         }
+
+
+
+
     }
 }

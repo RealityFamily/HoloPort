@@ -7,9 +7,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using QuickNet;
-using QuicNet;
-using QuicNet.Connections;
 
 namespace KinectV2Server
 {
@@ -25,18 +22,18 @@ namespace KinectV2Server
             receivingMessageBuffer = new byte[MessageSize];
         }
 
-        public QuicClient client = null;
+        public TcpClient client = null;
         public NetworkStream stream = null;
 
         public int ID = 0; //counter of clients (each is unique)
-        public int MessageSize = 1000;
+        public int MessageSize = 10000000;
         public bool readyToSend = true;
 
         public bool active = false;
 
         // Receiving buffers:
         public byte[] receivingMessageBuffer;
-        public const int maximumMessageQueueLength = 20;
+        public const int maximumMessageQueueLength = 50;
         public Queue<byte[]> sendingMessageQueue = new Queue<byte[]>(maximumMessageQueueLength);
 
         public int BytesReceived = 0;
@@ -93,7 +90,7 @@ namespace KinectV2Server
             }
         }
 
-        private QuicListener server;
+        private TcpListener server;
         private List<ClientState> clients = new List<ClientState>();
 
         public bool runningServer = false;
@@ -191,16 +188,16 @@ namespace KinectV2Server
                 }
                 //Console.WriteLine("IP: " + localIP);
 
-                //IPEndPoint listenEP = new IPEndPoint(IPAddress.Any, server_port);
-                server = new QuicListener(server_port);
+                IPEndPoint listenEP = new IPEndPoint(IPAddress.Any, server_port);
+                server = new TcpListener(listenEP);
                 // Start listening for client requests.
                 server.Start();
                 Print(name + " Server started " + localIP + ":" + server_port);
+
                 while (runningServer)
                 {
                     // Set the event to nonsignaled state.
                     allDoneServer.Reset();
-                    QuicConnection client = server.AcceptQuicClient();
                     server.BeginAcceptTcpClient(new AsyncCallback(ClientHandlerServerSide), server);
                     // Wait until a connection is made before continuing.
                     allDoneServer.WaitOne();

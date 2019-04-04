@@ -68,25 +68,25 @@
     <Compile Include="Assets\RoomAliveToolkit\Scripts\Editor\RATProjectionPassEditor.cs" />
     <Compile Include="Assets\RoomAliveToolkit\Scripts\Editor\RATSceneSetupEditor.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.WindowsMR.Editor">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Library/ScriptAssemblies/Unity.XR.WindowsMR.Editor.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Library/ScriptAssemblies/Unity.XR.WindowsMR.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.WindowsMR">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Library/ScriptAssemblies/Unity.XR.WindowsMR.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Library/ScriptAssemblies/Unity.XR.WindowsMR.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>D:/ProgramFiles/Unity/Editor/2018.3.6f1/Editor/Data/PlaybackEngines/MetroSupport/Tools/UnityEngine.AIModule.dll</HintPath>
@@ -320,34 +320,34 @@
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
     <Reference Include="DOTween">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Assets/HoloportationModelAndEnviroment/ExternAssets/Demigiant/DOTween/DOTween.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Assets/HoloportationModelAndEnviroment/ExternAssets/Demigiant/DOTween/DOTween.dll</HintPath>
     </Reference>
     <Reference Include="DOTween43">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Assets/HoloportationModelAndEnviroment/ExternAssets/Demigiant/DOTween/DOTween43.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Assets/HoloportationModelAndEnviroment/ExternAssets/Demigiant/DOTween/DOTween43.dll</HintPath>
     </Reference>
     <Reference Include="DOTween46">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Assets/HoloportationModelAndEnviroment/ExternAssets/Demigiant/DOTween/DOTween46.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Assets/HoloportationModelAndEnviroment/ExternAssets/Demigiant/DOTween/DOTween46.dll</HintPath>
     </Reference>
     <Reference Include="DOTween50">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Assets/HoloportationModelAndEnviroment/ExternAssets/Demigiant/DOTween/DOTween50.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Assets/HoloportationModelAndEnviroment/ExternAssets/Demigiant/DOTween/DOTween50.dll</HintPath>
     </Reference>
     <Reference Include="DOTweenEditor">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Assets/HoloportationModelAndEnviroment/ExternAssets/Demigiant/DOTween/Editor/DOTweenEditor.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Assets/HoloportationModelAndEnviroment/ExternAssets/Demigiant/DOTween/Editor/DOTweenEditor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Advertisements">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Library/PackageCache/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Library/PackageCache/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
-      <HintPath>D:/Leo's/Projects/GitHub/HoloPort/RoomAliveUnity/Library/PackageCache/com.unity.purchasing@2.0.3/Editor/UnityEditor.Purchasing.dll</HintPath>
+      <HintPath>D:/Leo's/Holoportation/RoomAliveUnity/Library/PackageCache/com.unity.purchasing@2.0.3/Editor/UnityEditor.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>D:/ProgramFiles/Unity/Editor/2018.3.6f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

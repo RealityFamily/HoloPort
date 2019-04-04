@@ -15,6 +15,9 @@ public class AudioStreamer : MonoBehaviour
     private float _timer = 0;
     private bool _recordNow = false;
 
+
+    private Queue<byte[]> _audioQueue = new Queue<byte[]>();
+
     private void Awake()
     {
         if (Instance == null)
@@ -23,7 +26,12 @@ public class AudioStreamer : MonoBehaviour
             DestroyImmediate(this);
     }
 
-    private void Update()
+    private void Start()
+    {
+        Init();
+    }
+
+    private void OLDUpdate()
     {
         if (!_recordNow)
             return;
@@ -43,7 +51,7 @@ public class AudioStreamer : MonoBehaviour
             byte[] byteClip = ToByteArray(samples);
 
 
-            if(byteClip.Length > 65000)
+            if (byteClip.Length > 65000)
             {
                 byte[] buf = new byte[65000];
                 System.Buffer.BlockCopy(byteClip, 0, buf, 0, 65000);
@@ -58,6 +66,18 @@ public class AudioStreamer : MonoBehaviour
             //SessionManager.SendMessageAudio(byteClip); //QosType.UnreliableFragmented
         }
         _lastSample = pos;
+    }
+
+    private void Update()
+    {
+
+        while (_audioQueue.Count > 0)
+        {
+            float[] f = ToFloatArray(_audioQueue.Dequeue());
+            _audio.clip = AudioClip.Create("clip", f.Length, 1, FREQUENCY, false);
+            _audio.clip.SetData(f, 0);
+            if (!_audio.isPlaying) _audio.Play();
+        }
     }
 
     public void Init()
@@ -88,10 +108,13 @@ public class AudioStreamer : MonoBehaviour
 
     public void Receive(byte[] byteClip)
     {
-        float[] f = ToFloatArray(byteClip);
-        _audio.clip = AudioClip.Create("clip", f.Length, 1, FREQUENCY, false);
-        _audio.clip.SetData(f, 0);
-        if (!_audio.isPlaying) _audio.Play();
+        Debug.Log("Audio incoming");
+        _audioQueue.Enqueue(byteClip);
+
+        //float[] f = ToFloatArray(byteClip);
+        //_audio.clip = AudioClip.Create("clip", f.Length, 1, FREQUENCY, false);
+        //_audio.clip.SetData(f, 0);
+        //if (!_audio.isPlaying) _audio.Play();
     }
 
     public byte[] ToByteArray(float[] floatArray)

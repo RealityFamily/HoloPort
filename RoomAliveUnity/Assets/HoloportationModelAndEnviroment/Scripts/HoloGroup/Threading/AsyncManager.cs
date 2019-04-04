@@ -26,17 +26,21 @@ namespace HoloGroup.Threading
         /// <returns></returns>
         public AsyncProcess MakeAsync(Action method)
         {
-           
+            
+            #region Standalone
 #if UNITY_EDITOR || UNITY_STANDALONE
             Thread thread = new Thread(new ThreadStart(method));
             return new AsyncProcess(thread);
-#elif NETFX_CORE
+#endif
+            #endregion
+
+            #region UWP
+#if NETFX_CORE
         Task task = new Task(method);
         return new AsyncProcess(task);
-#else
-            return null;
 #endif
-           
+            #endregion
+            return null;
         }
     }
 }

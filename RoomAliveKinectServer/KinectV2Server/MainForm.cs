@@ -16,7 +16,7 @@ using Microsoft.Kinect.Face;
 using SharpDX.DXGI;
 using SharpDX.DirectWrite;
 using RoomAliveToolkit;
-
+using HoloGroup.Networking.Internal.Sockets;
 
 namespace KinectV2Server
 {
@@ -31,18 +31,16 @@ namespace KinectV2Server
         enum DisplayType { Depth, Color, InfraRed, DepthForeground, DepthBackground, BodyIndex }
         DisplayType display = DisplayType.Depth;
 
-        public enum MessageTypes { DEPTH, IR, BODYINDEX, DEPTH_FOREGROUND, COLOR_NONE, COLOR_JPEG, COLOR_H264, COLOR_RAWYUY, AUDIO }
+        public enum MessageTypes { DEPTH, IR, BODYINDEX, DEPTH_FOREGROUND, COLOR_NONE, COLOR_JPEG, COLOR_H264, COLOR_RAWYUY, AUDIO} 
 
         private KinectServerSettings settings;
         private string settingsFileName = "KinectServerSettings.xml";
 
         private TCPNetworkStreamer depthServer;
         private TCPNetworkStreamer colorServer;
-        private TCPNetworkStreamer audioServer;
-        private TCPNetworkStreamer skeletonServer;
-        private TCPNetworkStreamer infraredServer;
-        private TCPNetworkStreamer configurationServer;
-
+        private TCPsocket audioServer;
+        private TCPNetworkStreamer configurationServer;     
+   
         Thread processColorImageThread = null;
 
         AutoResetEvent nextColorFrameReadyForProcess = new AutoResetEvent(false);
@@ -54,11 +52,11 @@ namespace KinectV2Server
         private SharpDX.Direct2D1.Bitmap colorBitmap, depthBitmap;
 
         // easy access variables
-        public static int depthImageWidth = /*Kinect2Calibration.depthImageWidth*/512;
-        public static int depthImageHeight = /*Kinect2Calibration.depthImageHeight*/424;
+        public const int depthImageWidth = 512;
+        public const int depthImageHeight = 424;
         public const int colorImageWidth = 1920;
         public const int colorImageHeight = 1080;
-        public float depthToColorWidthRatio = depthImageWidth / colorImageWidth;
+        public const float depthToColorWidthRatio = depthImageWidth / colorImageWidth;
         public float lastColorGain;
         public long lastColorExposureTimeTicks;
 
@@ -102,7 +100,7 @@ namespace KinectV2Server
         public byte[] currentFrameColorRaw = new byte[1];
         private byte[] nextFrameSkeleton = new byte[1];
         public byte[] currentFrameSkeleton = new byte[1];
-        private byte[] nextFrameAudio = new byte[1];
+        private byte[] nextFrameAudio = new byte[1]; 
         public byte[] currentFrameAudio = new byte[1];
 
 
@@ -115,8 +113,10 @@ namespace KinectV2Server
         FrameRate fpsRendering = new FrameRate(1);
         FrameRate fpsServerDepth = new FrameRate(1);
         FrameRate fpsServerColor = new FrameRate(1);
+        FrameRate fpsServerAudio = new FrameRate(1);
         FrameRate fpsKinectDepth = new FrameRate(1);
         FrameRate fpsKinectColor = new FrameRate(1);
+        FrameRate fpsServerSkeleton = new FrameRate(1);
 
 
         //Skeleton / Body Handling
@@ -162,7 +162,7 @@ namespace KinectV2Server
 
         public Kinect2Calibration kinect2Calibration;
 
-        #endregion
+#endregion
 
         #region Initialization
         static void Swap<T>(ref T lhs, ref T rhs)
@@ -196,6 +196,10 @@ namespace KinectV2Server
             t0.Start();
             Thread.Sleep(0);
 
+            // Initialize audio capture
+            InitAudioCapture();
+            checkBoxStreamAudio.Checked = settings.StreamAudio;
+
             // Create DX Textures
             D2DFactory = new SharpDX.Direct2D1.Factory();
 
@@ -214,14 +218,18 @@ namespace KinectV2Server
             textFormat = new TextFormat(new SharpDX.DirectWrite.Factory(), "Arial", SharpDX.DirectWrite.FontWeight.Bold, SharpDX.DirectWrite.FontStyle.Normal, SharpDX.DirectWrite.FontStretch.Normal, 12f); //used to have "en-us"
 
             // Create an array of wait handles for frame events
-            framesReady = new WaitHandle[2];
+            framesReady = new WaitHandle[3];
             framesReady[0] = nextFrameReady;
             framesReady[1] = nextColorFrameReady;
+            framesReady[2] = audioCaptureNotificationPositions[0].WaitHandle;
 
 
             //starting server
             depthServer = new TCPNetworkStreamer(true, settings.depthPort, "Depth");
             colorServer = new TCPNetworkStreamer(true, settings.colorPort, "Color");
+            //audioServer = new TCPNetworkStreamer(true, settings.audioPort, "Audio");
+            audioServer = new TCPsocket(new AudioStreamingTCP(), ETcpSocketType.ListenerSocket, 25734);
+
             configurationServer = new TCPNetworkStreamer(true, settings.configurationPort, "Configuration");
             configurationServer.ReceivedMessage += new TCPNetworkStreamer.ReceivedMessageEventHandler(ReceiveConfigurationRequest);
 
@@ -246,8 +254,10 @@ namespace KinectV2Server
         {
             // Create Images
             mDepthDisplayImage = new ARGBImage(depthImageWidth, depthImageHeight);
+            mInfraredImage = new ShortImage(depthImageWidth, depthImageHeight);
             mDepthImage = new ShortImage(depthImageWidth, depthImageHeight);
             mBodyIndexImage = new ByteImage(depthImageWidth, depthImageHeight);
+            mInfraredImageM = new ShortImage(depthImageWidth, depthImageHeight);
             mDepthImageM = new ShortImage(depthImageWidth, depthImageHeight);
             mBodyIndexImageM = new ByteImage(depthImageWidth, depthImageHeight);
             mColorImage = new ARGBImage(colorImageWidth, colorImageHeight);
@@ -316,8 +326,8 @@ namespace KinectV2Server
 
                 Console.WriteLine("Saving DepthFrameToCameraSpaceTable to files: mDepthToCameraSpace.bin and mDepthToCameraSpaceFlipped.bin");
                 Microsoft.Kinect.PointF[] depthToCameraTable = new Microsoft.Kinect.PointF[depthImageWidth * depthImageHeight];
-                depthToCameraTable = mKinectSensor.CoordinateMapper.GetDepthFrameToCameraSpaceTable();
-
+                depthToCameraTable = mKinectSensor.CoordinateMapper.GetDepthFrameToCameraSpaceTable(); 
+                
                 var buffer = new float[depthImageWidth * depthImageHeight * 2];
                 var fileStream = File.Create("mDepthToCameraSpace.bin");
                 var binaryWriter = new BinaryWriter(fileStream);
@@ -327,18 +337,18 @@ namespace KinectV2Server
                 var binaryWriterFlipped = new BinaryWriter(fileStreamFlipped);
 
                 int j = 0;
-                for (int r = 0; r < depthImageHeight; r++)
-                    for (int c = 0; c < depthImageWidth; c++)
+                for (int r = 0; r < 424; r++)
+                    for (int c = 0; c < 512; c++)
                     {
-                        var ray = depthToCameraTable[r * depthImageWidth + c];
+                        var ray = depthToCameraTable[r * 512 + c];
                         buffer[j] = ray.X;
-                        buffer[j + 1] = ray.Y;
+                        buffer[j+1] = ray.Y;
                         binaryWriter.Write(ray.X);
                         binaryWriter.Write(ray.Y);
 
-                        var rayFlipped = depthToCameraTable[r * depthImageWidth + (depthImageWidth - 1 - c)]; //depth to camera table needs to be flipped in X since all the images are also flipped in X 
+                        var rayFlipped = depthToCameraTable[r * 512 + (512 - 1 - c)]; //depth to camera table needs to be flipped in X since all the images are also flipped in X 
                         bufferFlipped[j] = rayFlipped.X;
-                        bufferFlipped[j + 1] = rayFlipped.Y;
+                        bufferFlipped[j+1] = rayFlipped.Y;
                         binaryWriterFlipped.Write(rayFlipped.X);
                         binaryWriterFlipped.Write(rayFlipped.Y);
 
@@ -355,7 +365,50 @@ namespace KinectV2Server
 
                 depthFrameToCameraSpaceTableFlipped = new Float2Image(depthImageWidth, depthImageHeight);
                 depthFrameToCameraSpaceTableFlipped.FromArray(bufferFlipped);
- 
+
+                // For Face tracking
+                // specify the required face frame results
+                FaceFrameFeatures faceFrameFeatures =
+                    FaceFrameFeatures.BoundingBoxInInfraredSpace
+                    | FaceFrameFeatures.PointsInInfraredSpace
+                    | FaceFrameFeatures.BoundingBoxInColorSpace
+                    | FaceFrameFeatures.PointsInColorSpace
+                    | FaceFrameFeatures.RotationOrientation
+                    | FaceFrameFeatures.FaceEngagement
+                    | FaceFrameFeatures.Glasses
+                    | FaceFrameFeatures.Happy
+                    | FaceFrameFeatures.LeftEyeClosed
+                    | FaceFrameFeatures.RightEyeClosed
+                    | FaceFrameFeatures.LookingAway
+                    | FaceFrameFeatures.MouthMoved
+                    | FaceFrameFeatures.MouthOpen
+                   ;
+
+                // create a face frame source + reader to track each face in the FOV
+                this.faceFrameSources = new FaceFrameSource[bodyCount];
+                this.faceFrameReaders = new FaceFrameReader[bodyCount];
+                for (int i = 0; i < bodyCount; i++)
+                {
+                    // create the face frame source with the required face frame features and an initial tracking Id of 0
+                    this.faceFrameSources[i] = new FaceFrameSource(this.mKinectSensor, 0, faceFrameFeatures);
+
+                    // open the corresponding reader
+                    this.faceFrameReaders[i] = this.faceFrameSources[i].OpenReader();
+                }
+
+                // allocate storage to store face frame results for each face in the FOV
+                this.faceFrameResults = new FaceFrameResult[bodyCount];
+
+                //FaceTracking
+                for (int i = 0; i < this.bodyCount; i++)
+                {
+                    if (this.faceFrameReaders[i] != null)
+                    {
+                        // wire handler for face frame arrival
+                        this.faceFrameReaders[i].FrameArrived += this.Reader_FaceFrameArrived;
+                    }
+                }
+
                 this.readerColor = this.mKinectSensor.ColorFrameSource.OpenReader(); //do this separately to make sure you don't slow down the depth stream
 
                 this.reader = this.mKinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Depth | FrameSourceTypes.Body | FrameSourceTypes.Infrared | FrameSourceTypes.BodyIndex);
@@ -364,7 +417,11 @@ namespace KinectV2Server
 
                 this.reader.MultiSourceFrameArrived += this.Reader_MultiSourceFrameArrived;
                 this.readerColor.FrameArrived += this.Reader_ColorSourceFrameArrived;
+                
+               
 
+                //this.audioBeamFrameReader = this.mKinectSensor.AudioSource.OpenReader();
+                //this.audioBeamFrameReader.FrameArrived += audioBeamFrameReader_FrameArrived;
             }
         }
 
@@ -375,12 +432,12 @@ namespace KinectV2Server
             byte requestType = e.data[0];
             int id = ((ClientState)sender).ID;
 
-            switch (requestType)
-            {
+            switch(requestType)
+            { 
                 case 1:    //send the depthFrameToCameraSpaceTable 
 
                     var res1 = this.checkBoxFlip.Checked ? depthFrameToCameraSpaceTableFlipped.ToByteArray() : depthFrameToCameraSpaceTable.ToByteArray();
-
+                    
                     Thread.Sleep(1000); //hack, otherwise Unity crashes
 
                     byte[] message1 = new byte[res1.Length + 1];//res2.Length + 1];
@@ -394,7 +451,6 @@ namespace KinectV2Server
                 case 2: //send the serialized Kinect2Calibration
 
                     XmlSerializer serializer = new XmlSerializer(typeof(Kinect2Calibration));
-
                     MemoryStream ms = new MemoryStream();
                     var writer = new StreamWriter(ms);
                     serializer.Serialize(writer, kinect2Calibration);
@@ -413,7 +469,7 @@ namespace KinectV2Server
                     Console.WriteLine("Configuration Server received a request to terminate client " + id + " connection.");
                     //add the client to the soft close list
                     //need to explicitly close the client since no other messages will get otherwise subsequent connections will get messed up. 
-                    clientsToClose.Add(id, DateTime.Now.Ticks + 10000000); //wait 1 second to close this client
+                    clientsToClose.Add(id, DateTime.Now.Ticks+10000000); //wait 1 second to close this client
                     break;
             }
         }
@@ -421,7 +477,7 @@ namespace KinectV2Server
         private void InitAudioCapture()
         {
             // Create audio format
-            WaveFormat format = new WaveFormat(44100, 16, 1);
+            WaveFormat format = new WaveFormat(44100,16,1);
 
             // Create audio capture buffer
             CaptureBufferDescription audioCaptureBufferDesc = new CaptureBufferDescription()
@@ -463,6 +519,23 @@ namespace KinectV2Server
                 readerColor = null;
             }
 
+            for (int i = 0; i < this.bodyCount; i++)
+            {
+                if (this.faceFrameReaders[i] != null)
+                {
+                    // FaceFrameReader is IDisposable
+                    this.faceFrameReaders[i].Dispose();
+                    this.faceFrameReaders[i] = null;
+                }
+
+                if (this.faceFrameSources[i] != null)
+                {
+                    // FaceFrameSource is IDisposable
+                    this.faceFrameSources[i].Dispose();
+                    this.faceFrameSources[i] = null;
+                }
+            }
+
             if (this.mKinectSensor != null)
             {
                 this.mKinectSensor.Close();
@@ -479,30 +552,20 @@ namespace KinectV2Server
                 colorServer.Close();
                 colorServer = null;
             }
-            if (skeletonServer != null)
-            {
-                skeletonServer.Close();
-                skeletonServer = null;
-            }
-            if (audioServer != null)
-            {
-                audioServer.Close();
-                audioServer = null;
-            }
-            if (infraredServer != null)
-            {
-                infraredServer.Close();
-                infraredServer = null;
-            }
+            //if (audioServer != null)
+            //{
+            //    audioServer.Close();
+            //    audioServer = null;
+            //}
             if (configurationServer != null)
             {
                 configurationServer.Close();
                 configurationServer = null;
-            }
+            }        
         }
-        #endregion
+#endregion
 
-        #region Processing Thread
+#region Processing Thread
 
         System.Diagnostics.Stopwatch stopwatch3 = new System.Diagnostics.Stopwatch();
 
@@ -515,14 +578,14 @@ namespace KinectV2Server
                 stopwatch3.Start();
 
 
-                if (clientsToClose.Count > 0) //house cleaning
+                if(clientsToClose.Count>0) //house cleaning
                 {
                     long now = DateTime.Now.Ticks;
                     int[] list = new int[clientsToClose.Count];
-                    clientsToClose.Keys.CopyTo(list, 0);
+                    clientsToClose.Keys.CopyTo(list,0);
                     foreach (int id in list)
                     {
-                        if (now > clientsToClose[id])
+                        if(now > clientsToClose[id] )
                         {
                             configurationServer.CloseClient(id);
                             clientsToClose.Remove(id);
@@ -534,8 +597,7 @@ namespace KinectV2Server
                 {
                     if (depthServer != null) depthServer.CloseAllClients();
                     if (colorServer != null) colorServer.CloseAllClients();
-                    if (audioServer != null) audioServer.CloseAllClients();
-                    if (skeletonServer != null) skeletonServer.CloseAllClients();
+                    //if (audioServer != null) audioServer.CloseAllClients();
                     if (configurationServer != null) configurationServer.CloseAllClients();
                     killAllClients = false;
                 }
@@ -543,32 +605,56 @@ namespace KinectV2Server
                 int signalIndex = WaitHandle.WaitAny(framesReady);
 
                 if (signalIndex == 0) // depth, flow  and skeleton
-                {
+                {          
                     //don't do the work if there are no clients connected...
                     if (depthServer.GetClientCount() > 0)
-                    {
-                        depthServer.SendMessageToAllClients(currentFrameDepth);
-                        fpsServerDepth.Tick();
+                    { 
+                        depthServer.SendMessageToAllClients(currentFrameDepth); 
+                        fpsServerDepth.Tick(); 
                     }
+
                     if (this.WindowState != FormWindowState.Minimized) Render();
+                    //if (stopwatch3.ElapsedMilliseconds > 60) Console.WriteLine("Processing thread glitch: " + stopwatch3.ElapsedMilliseconds + " ms");
                 }
                 else if (settings.StreamColor && signalIndex == 1) // color
-                {
+                {                 
                     if (colorServer.GetClientCount() > 0 && currentFrameColor.Length > 1) //don't do the work if there are no clients connected... have nothing to send
                     {
                         colorServer.SendMessageToAllClients(currentFrameColor);
-
+                      
                         fpsServerColor.Tick();
                     }
+                }
+                else if (settings.StreamAudio && signalIndex == 2) // audio
+                {
+                    // Get audio frame from the capture buffer and send it to clients
+
+                    long timeStampAudio = kinectTimer.ElapsedMilliseconds;
+                    //AssembleAudioPacket(timeStampAudio);
+                    AssembleAudioPacketDirectCapture(timeStampAudio, audioCaptureBuffer);
+                    lock (nextFrameAudio)
+                    {
+                        Swap<byte[]>(ref nextFrameAudio, ref currentFrameAudio);
+                    }
+
+                    
+                        fpsServerAudio.Tick();
+                    //audioServer.SendMessageToAllClients(currentFrameAudio);
+
+                    //НИКИТА, ТЕБЕ ПИСАТЬ ЗДЕСЬ. ИСПОЛЬЗУЙ currentFrameAudio ДЛЯ ОТПРАВКИ. ЭТО ТО, ЧТО ОТПРАВЛЯЛОСЬ ПО TCP
+                    AudioStreamingTCP.Instance.AddPackage(currentFrameAudio);
+
+
+
                 }
                 Thread.Sleep(0); //makes sure that UI thread is not starved
             }
         }
-        #endregion
+#endregion
 
-        #region Rendering
+#region Rendering
 
-        const int verticalOffsetColor = 68;
+        const int verticalOffsetColor = 68; 
         void Render()
         {
 
@@ -595,7 +681,7 @@ namespace KinectV2Server
                 case DisplayType.DepthForeground:
                     lock (mDepthForegroundImage)
                     {
-                        if (settings.BlurDepthImages) mDepthDisplayImage.CopyShortImageForGrayscaleDisplay(mSmoothedDepthForegroundImage, 8000);
+                        if(settings.BlurDepthImages) mDepthDisplayImage.CopyShortImageForGrayscaleDisplay(mSmoothedDepthForegroundImage, 8000);
                         else mDepthDisplayImage.CopyShortImageForGrayscaleDisplay(mDepthForegroundImage, 8000);
                     }
                     break;
@@ -609,7 +695,7 @@ namespace KinectV2Server
                     lock (mDepthForegroundImage)
                     {
                         mDepthDisplayImage.Copy(mBodyIndexImage);
-
+                        
                     }
                     break;
             }
@@ -685,7 +771,7 @@ namespace KinectV2Server
             {
                 float scaleFactor = (float)depthImageWidth / (float)colorImageWidth;
 
-                foreach (BodyContainer skeleton in skeletons.Values)
+                foreach(BodyContainer skeleton in skeletons.Values)
                 {
                     SharpDX.Mathematics.Interop.RawRectangleF faceBox;
                     List<System.Drawing.PointF> facePoints = new List<System.Drawing.PointF>();
@@ -732,7 +818,7 @@ namespace KinectV2Server
         {
             float x1 = settings.FlipImages ? depthImageWidth - pt1.X : pt1.X;
             float x2 = settings.FlipImages ? depthImageWidth - pt2.X : pt2.X;
-
+            
             depthRenderTarget.DrawLine(new SharpDX.Mathematics.Interop.RawVector2(x1, pt1.Y), new SharpDX.Mathematics.Interop.RawVector2(x2, pt2.Y), rawBrush, 2f);
 
         }
@@ -750,16 +836,17 @@ namespace KinectV2Server
             labelDepthFPS.Text = Math.Round(fpsKinectDepth.Framerate, 2).ToString() + " Hz";
             labelColorFPS.Text = Math.Round(fpsKinectColor.Framerate, 2).ToString() + " Hz";
 
-            labelDepth.Text = depthServer.GetClientCount().ToString() + "  (" + Math.Round(fpsServerDepth.Framerate, 2).ToString() + " Hz)";
+            labelDepth.Text = depthServer.GetClientCount().ToString() + "  ("+ Math.Round(fpsServerDepth.Framerate, 2).ToString() + " Hz)";
             labelColor.Text = colorServer.GetClientCount().ToString() + "  (" + Math.Round(fpsServerColor.Framerate, 2).ToString() + " Hz)";
+            //labelAudio.Text = audioServer.GetClientCount().ToString() + "  (" + Math.Round(fpsServerAudio.Framerate, 2).ToString() + " Hz)";
             labelConfig.Text = configurationServer.GetClientCount().ToString();
 
             labelBodies.Text = skeletons.Count.ToString();
             labelThreshold.Text = settings.ThresholdNoise.ToString();
         }
-        #endregion
+#endregion
 
-        #region Audio
+#region Audio
         //private List<AutoResetEvent> audioFrameReady = new List<AutoResetEvent>();
         //public List<Queue<byte[]>> audioFrameQueues = new List<Queue<byte[]>>();
         Queue<byte[]> audioFrameQueue = new Queue<byte[]>();
@@ -795,7 +882,7 @@ namespace KinectV2Server
 
         public byte[] GetLatestAudio()
         {
-            lock (audioFrameQueue)
+            lock (audioFrameQueue) 
             {
                 var buffer = new byte[audioFrameQueue.Count * 1024];
                 int count = audioFrameQueue.Count;
@@ -808,9 +895,9 @@ namespace KinectV2Server
             }
         }
 
-        #endregion Audio 
+#endregion Audio 
 
-        #region Color Processing
+#region Color Processing
         /// <summary>
         /// Handles the color frame data arriving from the sensor
         /// </summary>
@@ -843,7 +930,7 @@ namespace KinectV2Server
                         else
                             Swap<ARGBImage>(ref mColorImage, ref mColorImageM);
                     }
-                    if (killProcessColorThread)
+                    if(killProcessColorThread)
                     {
                         if (processColorImageThread != null)
                         {
@@ -877,15 +964,15 @@ namespace KinectV2Server
         bool killProcessColorThread = false;
         private void ProcessColorImage()
         {
-            while (settings.StreamColor)
+            while (settings.StreamColor) 
             {
                 bool ok = nextColorFrameReadyForProcess.WaitOne(10000);
                 if (!ok) break;
                 long ticks = kinectTimer.ElapsedMilliseconds;
 
                 lock (nextFrameColor)
-                {
-                    switch (settings.colorCompression)
+                { 
+                    switch(settings.colorCompression)
                     {
                         case KinectServerSettings.ColorCompressionType.NONE:
                             nextFrameColor = AssembleGenericImagePacket(ticks, mColorImage.DataIntPtr, colorImageWidth * colorImageHeight * 4, (int)MessageTypes.COLOR_NONE);
@@ -894,17 +981,17 @@ namespace KinectV2Server
                             nextFrameColor = AssembleColorPacketJPEG(ticks, mColorImage.DataIntPtr, System.Windows.Media.PixelFormats.Bgra32, colorImageWidth, colorImageHeight);
                             break;
                     }
-
+                    
                     //colorFrameQueue.Enqueue(nextFrameColor);
                     Swap<byte[]>(ref nextFrameColor, ref currentFrameColor);
                 }
 
                 if (settings.ProcessColorRAW)
-                {
-                    lock (nextFrameColorRaw)
+                { 
+                    lock(nextFrameColorRaw)
                     {
-                        nextFrameColorRaw = AssembleGenericImagePacket(ticks, mColorImageYUY.DataIntPtr, colorImageWidth * colorImageHeight * 2, (int)MessageTypes.COLOR_RAWYUY);
-                        Swap<byte[]>(ref nextFrameColorRaw, ref currentFrameColorRaw);
+                        nextFrameColorRaw = AssembleGenericImagePacket(ticks, mColorImageYUY.DataIntPtr, colorImageWidth*colorImageHeight*2, (int)MessageTypes.COLOR_RAWYUY);
+                        Swap<byte[]>(ref nextFrameColorRaw, ref currentFrameColorRaw);  
                     }
                 }
                 nextColorFrameReady.Set();
@@ -962,7 +1049,7 @@ namespace KinectV2Server
                 Win32.CopyMemory((IntPtr)p1, imageDataPtr, (UIntPtr)imageSizeBytes);
             }
             stopwatch4.Stop();
-            return arr;
+            return arr; 
         }
 
         private byte[] AssembleColorPacketJPEG(long timeStamp, IntPtr imageData, System.Windows.Media.PixelFormat format, int width, int height)
@@ -1000,16 +1087,16 @@ namespace KinectV2Server
                 encoder.Save(memoryStream);
 
                 var buf = memoryStream.ToArray();
-
+                
                 stopwatch4.Stop();
                 if (ShowTimingInformation) Console.WriteLine(string.Format("JPEG: {0} ms {1} bytes", stopwatch4.ElapsedMilliseconds, buf.Length));
-
+                
                 return buf;
             }
         }
-        #endregion
+#endregion
 
-        #region DepthProcessing
+#region DepthProcessing
         System.Diagnostics.Stopwatch stopwatchTotal = new System.Diagnostics.Stopwatch();
         System.Diagnostics.Stopwatch stopwatchGetFrames = new System.Diagnostics.Stopwatch();
         System.Diagnostics.Stopwatch stopwatchBlur = new System.Diagnostics.Stopwatch();
@@ -1050,6 +1137,18 @@ namespace KinectV2Server
                         var timestampInfrared = infraredFrame.RelativeTime;
                         var timestampDepth = depthFrame.RelativeTime;
 
+                        //INFRARED
+                        var buffer1 = infraredFrame.LockImageBuffer();
+                        mInfraredImageM.Copy(buffer1.UnderlyingBuffer);
+                        buffer1.Dispose();
+                        lock (mInfraredImage)
+                        {
+                            if (settings.FlipImages)
+                                mInfraredImage.XMirror(mInfraredImageM);
+                            else
+                                Swap<ShortImage>(ref mInfraredImage, ref mInfraredImageM);
+                        }
+                        timeStampInfrared = infraredFrame.RelativeTime.Ticks;                        
 
                         //DEPTH
                         var buffer2 = depthFrame.LockImageBuffer();
@@ -1071,13 +1170,13 @@ namespace KinectV2Server
                         bodyIndexFrame = multiSourceFrame.BodyIndexFrameReference.AcquireFrame();
                         if (bodyIndexFrame != null)
                         {
-
+                            
                             var buffer3 = bodyIndexFrame.LockImageBuffer();
                             mBodyIndexImageM.Copy(buffer3.UnderlyingBuffer);
                             buffer3.Dispose();
                             lock (mBodyIndexImage)
                             {
-                                if (settings.FlipImages)
+                                if(settings.FlipImages)
                                     mBodyIndexImage.XMirror(mBodyIndexImageM);
                                 else
                                     Swap<ByteImage>(ref mBodyIndexImage, ref mBodyIndexImageM);
@@ -1102,7 +1201,7 @@ namespace KinectV2Server
                                 lock (mDepthBackgroundImage)
                                 {
                                     mDepthBackgroundImage.Copy(avgDepth);
-                                    Console.WriteLine("Saving background DEPTH image to file " + backgroundFileName + ".bin");
+                                    Console.WriteLine("Saving background DEPTH image to file " + backgroundFileName +".bin");
                                     mDepthBackgroundImage.SaveToFile(backgroundFileName + ".bin");
                                 }
                                 lock (mColorImage)
@@ -1153,13 +1252,13 @@ namespace KinectV2Server
                                 pIn++;
                             }
                         }
-
+                        
                         bodyFrame = multiSourceFrame.BodyFrameReference.AcquireFrame();
-
+                        
                         if (bodyFrame != null)
                         {
                             foreach (BodyContainer skeleton in skeletons.Values) skeleton.updated = false; //mark them all as not-fresh
-
+                        
                             var floorClipPlane = bodyFrame.FloorClipPlane;
                             //BENKO CONVERSION FIX - check that this is really a good gravity vector.
                             // Not sure why this is necessary to bring this into agreement with kinect v1:
@@ -1168,19 +1267,19 @@ namespace KinectV2Server
                             lastKinectAccReading.Y = -floorClipPlane.Y;
                             lastKinectAccReading.Z = -floorClipPlane.Z;
                             lastKinectAccReading.W = floorClipPlane.W;
-
+                            
                             // The first time GetAndRefreshBodyData is called, Kinect will allocate each Body in the array.
                             // As long as those body objects are not disposed and not set to null in the array,
                             // those body objects will be re-used.
                             bodyFrame.GetAndRefreshBodyData(mBodies); //get skeleton data
 
-                            for (int k = 0; k < bodyCount; k++)
+                            for(int k =0; k<bodyCount; k++)
                             {
                                 Body body = this.mBodies[k];
                                 if (body.IsTracked)
                                 {
                                     //Console.WriteLine(body.TrackingId);
-                                    BodyContainer skeleton;
+                                    BodyContainer skeleton; 
                                     if (skeletons.ContainsKey(body.TrackingId))
                                     {
                                         skeleton = skeletons[body.TrackingId];
@@ -1217,10 +1316,10 @@ namespace KinectV2Server
 
                                     //IMPORTANT: Face tracking doesn't work without that!
                                     // update the face frame source to track this body 
-                                    //this.faceFrameSources[k].TrackingId = body.TrackingId;                                   
+                                    this.faceFrameSources[k].TrackingId = body.TrackingId;                                   
                                 }
                             }
-
+                            
                             //cleanup old skeletons
                             List<ulong> toRemove = new List<ulong>();
                             foreach (BodyContainer skeleton in skeletons.Values) if (!skeleton.updated) toRemove.Add(skeleton.ID);
@@ -1243,11 +1342,11 @@ namespace KinectV2Server
                                     nextFrameDepth = AssembleGenericImagePacket(currTime, mDepthImage.DataIntPtr, depthImageWidth * depthImageHeight * 2, (int)MessageTypes.DEPTH);
                                     break;
                                 case KinectServerSettings.StreamType.BodyIndex:
-                                    nextFrameDepth = AssembleGenericImagePacket(currTime, mDepthPlayerIndexImage.DataIntPtr, depthImageWidth * depthImageHeight * 2, (int)MessageTypes.BODYINDEX);
+                                    nextFrameDepth = AssembleGenericImagePacket(currTime, mDepthPlayerIndexImage.DataIntPtr, depthImageWidth * depthImageHeight * 2, (int) MessageTypes.BODYINDEX);
                                     break;
                                 default:
                                 case KinectServerSettings.StreamType.Foreground:
-                                    if (settings.BlurDepthImages)
+                                    if(settings.BlurDepthImages) 
                                         nextFrameDepth = AssembleGenericImagePacket(currTime, mSmoothedDepthForegroundImage.DataIntPtr, depthImageWidth * depthImageHeight * 2, (int)MessageTypes.DEPTH_FOREGROUND);
                                     else
                                         nextFrameDepth = AssembleGenericImagePacket(currTime, mDepthForegroundImage.DataIntPtr, depthImageWidth * depthImageHeight * 2, (int)MessageTypes.DEPTH_FOREGROUND);
@@ -1256,12 +1355,17 @@ namespace KinectV2Server
                             Swap<byte[]>(ref nextFrameDepth, ref currentFrameDepth);
                         }
 
+                        lock (nextFrameIr)
+                        {
+                            nextFrameIr = AssembleGenericImagePacket(currTime, mInfraredImage.DataIntPtr, depthImageWidth * depthImageHeight * 2, (int)MessageTypes.IR);
+                            Swap<byte[]>(ref nextFrameIr, ref currentFrameIr);
+                        }
                         stopwatchTotal.Stop();
 
                         if (ShowTimingInformation) Console.WriteLine("MultiFrame Get: {0} ms  Blr: {1} ms  FG: {2} ms Tot: {3} ms",
                             stopwatchGetFrames.ElapsedMilliseconds,
                             stopwatchBlur.ElapsedMilliseconds,
-                            stopwatchForeground.ElapsedMilliseconds,
+                            stopwatchForeground.ElapsedMilliseconds, 
                             stopwatchTotal.ElapsedMilliseconds);
                         nextFrameReady.Set();
                     }
@@ -1339,15 +1443,15 @@ namespace KinectV2Server
             //assemble a message
             MemoryStream stream = new MemoryStream();
             BinaryWriter binaryWriter = new BinaryWriter(stream);
-
+            
             binaryWriter.Write(timeStamp); //CHANGED to front
-
+            
             binaryWriter.Write((byte)skeletons.Count);
             foreach (BodyContainer skeleton in skeletons.Values)
             {
                 binaryWriter.Write(skeleton.ID);
 
-                for (int i = 0; i < 25; i++)
+                for (int i = 0; i < 25; i++) 
                 {
 
                     var joint = skeleton.jointPositions[i];
@@ -1364,7 +1468,7 @@ namespace KinectV2Server
                 binaryWriter.Write(skeleton.HandRightState);
 
                 //face information
-                for (int i = 0; i < 5; i++)
+                for(int i = 0; i<5; i++)
                 {
                     binaryWriter.Write(skeleton.facePointsWorld[i].X);
                     binaryWriter.Write(skeleton.facePointsWorld[i].Y);
@@ -1425,9 +1529,9 @@ namespace KinectV2Server
             lock (nextFrameAudio)
                 nextFrameAudio = frame;
         }
-        #endregion
+#endregion
 
-        #region FaceProcessing
+#region FaceProcessing
         /// <summary>
         /// Converts rotation quaternion to Euler angles 
         /// And then maps them to a specified range of values to control the refresh rate
@@ -1478,10 +1582,10 @@ namespace KinectV2Server
 
                         //update the corresponding skeleton information
                         BodyContainer skeleton = skeletons[faceFrame.TrackingId];
-                        if (skeleton != null)
+                        if(skeleton != null)
                         {
                             skeleton.faceRotationQ = faceFrame.FaceFrameResult.FaceRotationQuaternion;
-                            int yaw, pitch, roll;
+                            int yaw,pitch, roll;
                             ExtractFaceRotationInDegrees(faceFrame.FaceFrameResult.FaceRotationQuaternion, out pitch, out yaw, out roll);
                             skeleton.faceRotationYPR = new Vector3(yaw, pitch, roll);
 
@@ -1492,8 +1596,8 @@ namespace KinectV2Server
 
                             skeleton.faceRectInInfraredSpace = new SharpDX.Mathematics.Interop.RawRectangleF(leftBox, faceBoxSource.Top, rightBox, faceBoxSource.Bottom);
 
-                            int i = 0;
-                            foreach (PointF p in faceFrame.FaceFrameResult.FacePointsInInfraredSpace.Values)
+                            int i =0;
+                            foreach(PointF p in faceFrame.FaceFrameResult.FacePointsInInfraredSpace.Values)
                             {
                                 DepthSpacePoint dp = new DepthSpacePoint();
                                 dp.X = p.X; dp.Y = p.Y;
@@ -1513,7 +1617,7 @@ namespace KinectV2Server
                             skeleton.faceRectInColorSpace = new SharpDX.Mathematics.Interop.RawRectangleF(leftBox, faceBoxSource.Top, rightBox, faceBoxSource.Bottom);
 
                             i = 0;
-                            foreach (PointF p in faceFrame.FaceFrameResult.FacePointsInColorSpace.Values)
+                            foreach(PointF p in faceFrame.FaceFrameResult.FacePointsInColorSpace.Values)
                             {
                                 float x = settings.FlipImages ? colorImageWidth - p.X : p.X;
                                 skeleton.facePointsInColorSpace[i++] = new System.Drawing.PointF(x, p.Y);
@@ -1605,9 +1709,9 @@ namespace KinectV2Server
 
             return isFaceValid;
         }
-        #endregion FaceProcessing
+#endregion FaceProcessing
 
-        #region Form Handling Methods
+#region Form Handling Methods
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Stop();
@@ -1713,7 +1817,7 @@ namespace KinectV2Server
                 {
                     Console.WriteLine("Saving OBJ file " + saveFileDialog.FileName);
                     Console.WriteLine("IMPORTANT: Make sure that Flip Image option is turned OFF when the background images are acquired! Otherwise the saved OBJ will not be correct!");
-                    ObjFile.Save(saveFileDialog.FileName, kinect2Calibration, mDepthBackgroundImage, backgroundFileName + ".jpg", RoomAliveToolkit.Matrix.Identity(4, 4));
+                    ObjFile.Save(saveFileDialog.FileName, kinect2Calibration, mDepthBackgroundImage, backgroundFileName + ".jpg", RoomAliveToolkit.Matrix.Identity(4,4));
                 }
                 catch (Exception ex)
                 {
@@ -1727,6 +1831,6 @@ namespace KinectV2Server
         {
             this.Close();
         }
-        #endregion
+#endregion
     }
 }
