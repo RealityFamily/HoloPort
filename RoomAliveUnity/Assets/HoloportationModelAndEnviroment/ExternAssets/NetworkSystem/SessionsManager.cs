@@ -97,6 +97,7 @@ public class SessionsManager : MonoBehaviour
                     NetworkID networkID;
                     NodeID nodeID;
                     byte getConnectionInfoError;
+                    Debug.Log("CONNECT");
 
                     NetworkTransport.GetConnectionInfo(socketID, connectionID, out connectionIP, out connectionPort, out networkID, out nodeID, out getConnectionInfoError); // ToDo: handle error
                     connectionIP = connectionIP.Substring(7);

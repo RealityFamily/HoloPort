@@ -16,7 +16,6 @@ public class EnviromentSinchronizationSession : SessionBehaviour
 
     private TCPsocket _audioClient;
 
-
     public override void OnSessionStart()
     {
         base.OnSessionStart();
@@ -83,8 +82,8 @@ public class EnviromentSinchronizationSession : SessionBehaviour
     {
         List<byte> serializedTransform = new List<byte>();
 
-        Vector3 inversedPosition = Target.position; // WorldToAnchorSpace(Target.position);
-        Quaternion inversedRotation = Target.rotation; // WorldToAnchorSpace(Target.rotation);
+        Vector3 inversedPosition = Target.position; 
+        Quaternion inversedRotation = Target.rotation; 
 
         // position
         serializedTransform.AddRange(BitConverter.GetBytes(inversedPosition.x));

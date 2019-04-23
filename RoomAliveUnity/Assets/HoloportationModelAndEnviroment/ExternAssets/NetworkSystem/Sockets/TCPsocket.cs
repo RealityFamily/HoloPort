@@ -203,9 +203,9 @@ public class TCPsocket : IDisposable
 
             _socketBehaviour.SocketTransferingProcess(true, stream);
 
-            stream.Dispose();
-            _socket.Close();
-            _socket = null;
+            //stream.Dispose();
+            //_socket.Close();
+            //_socket = null;
         }
         else
         {
